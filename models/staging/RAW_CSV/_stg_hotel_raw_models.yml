@@ -8,11 +8,10 @@ models:
         description: "Clave primaria de la tabla camas"
         data_tests:
           - unique
-          - not_null        
+          - not_null       
       
       - name: ID_HABITACION
-        description: "ID que identifica la habitacion"
-      
+        description: "ID que identifica la habitacion"      
       - name: TIPO_CAMA
         description: "columna que muerta el tipo de cama"
 
@@ -24,26 +23,19 @@ models:
         description: "ID único del cliente (era C1 en el CSV)"
         data_tests:
           - unique
-          - not_null
-      
+          - not_null      
       - name: nombre
-        description: "Nombre del cliente (era el C2 en el CSV)"
-      
+        description: "Nombre del cliente (era el C2 en el CSV)"      
       - name: dni_pasaporte
         description: "Dni/pasaporte del cliente (era el c3 en el CSV)"
-
       - name: nacionalidad
         description: "Nacionalidad del cliente (era c4 en el CSV)"
-
       - name: direccion
         description: "Direccion del cliente (era c5 en el CSV)"
-
       - name: email
         description: "Email del cliente (era c6 en el CSV)"
-
       - name: telefono
         description: "Telefono del cliente (era c7 en el CSV)"
-
       - name: fecha_registro
         description: "Fecha de registro del cliente en el sistema (era c8 en el CSV)"
 
@@ -75,7 +67,6 @@ models:
         data_tests:
           - unique
           - not_null
-
       - name: ID_HABITACION
         description: 
       - name: ID_HOTEL
@@ -92,3 +83,5 @@ models:
         description: 
       - name: DESCRIPCION
         description: 
+
+  
