@@ -1,0 +1,113 @@
+version: 2
+
+sources:
+  - name: hotel_raw
+    database: HOTEL_DEV_BRONZE_DB
+    schema: RAW_HOTEL_DATA
+    config:
+      freshness:
+        warn_after: {count: 100, period: day}
+        error_after: {count: 365, period: day}
+      loaded_at_field: loaded_at
+
+    
+    tables:
+      - name: RAW_CAMA
+        columns: 
+          - name: ID_CAMA
+          - name: ID_HABITACION
+          - name: TIPO_CAMA
+
+      - name: RAW_CLIENTE
+        columns: 
+          - name: C1
+          - name: C2
+          - name: C3
+          - name: C4
+          - name: C5
+          - name: C6
+          - name: C7
+          - name: C8
+
+      - name: RAW_CONSUMO
+        columns: 
+          - name: ID_CONSUMO
+          - name: ID_RESERVA
+          - name: ID_SERVICIO
+          - name: FECHA_CONSUMO
+          - name: CANTIDAD
+          - name: SUBTOTAL
+
+      - name: RAW_HABITACION
+        columns: 
+          - name: ID_HABITACION
+          - name: ID_HOTEL
+          - name: NUMERO_HABITACION
+          - name: TIPO
+          - name: ESTADO
+          - name: PRECIO_NOCHE
+          - name: CAPACIDAD_MAXIMA
+          - name: DESCRIPCION
+
+      - name: RAW_HOTEL
+        columns: 
+          - name: ID_HOTEL
+          - name: NOMBRE
+          - name: DIRECCION
+          - name: CIUDAD
+          - name: PAIS
+          - name: TELEFONO
+          - name: EMAIL
+          - name: FECHA_CREACION
+          - name: ACTIVO
+          - name: CATEGORIA
+
+      - name: RAW_PAGO
+        columns:
+          - name: ID_PAGO
+          - name: ID_RESERVA
+          - name: FECHA_PAGO
+          - name: MONTO_TOTAL
+          - name: FORMA_PAGO
+          - name: ESTADO_PAGO
+          - name: REFERENCIA_PAGO
+
+      - name: RAW_RECEPCIONISTA
+        columns:
+          - name: ID_RECEPCIONISTA
+          - name: ID_HOTEL
+          - name: NOMBRE
+          - name: EMAIL
+          - name: PASSWORD_HASH
+          - name: TELEFONO
+          - name: FECHA_CONTRATACION
+          - name: ACTIVO
+
+      - name: RAW_RESERVA
+        columns:
+          - name: ID_RESERVA
+          - name: ID_CLIENTE
+          - name: CANAL_RESERVA
+          - name: ID_HABITACION
+          - name: FECHA_RESERVA
+          - name: FECHA_CHECKIN
+          - name: FECHA_CHECKOUT
+          - name: NUMERO_HUESPEDES
+          - name: ESTADO_RESERVA
+          - name: NOTAS
+
+      - name: RAW_SERVICIO
+        columns:
+          - name: ID_SERVICIO
+          - name: NOMBRE_SERVICIO
+          - name: CATEGORIA
+          - name: DESCRIPCION
+          - name: PRECIO_UNITARIO
+          - name: ACTIVO
+
+      - name: RAW_TURNO
+        columns:
+          - name: ID_TURNO
+          - name: ID_RECEPCIONISTA
+          - name: FECHA_INICIO
+          - name: FECHA_FIN
