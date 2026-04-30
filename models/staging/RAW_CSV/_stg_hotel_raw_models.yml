@@ -8,8 +8,7 @@ models:
         description: "Clave primaria de la tabla camas"
         data_tests:
           - unique
-          - not_null       
-      
+          - not_null  
       - name: ID_HABITACION
         description: "ID que identifica la habitacion"      
       - name: TIPO_CAMA
@@ -63,25 +62,117 @@ models:
     description: "Modelo de staging la tabla habitacion."
     columns: 
       - name: id_habitacion
-        description: "ID único de la tabla habitacion"
+        description: "ID unico de la tabla habitacion"
         data_tests:
           - unique
           - not_null
       - name: ID_HABITACION
-        description: 
+        description: ""
       - name: ID_HOTEL
-        description: 
+        description: ""
       - name: NUMERO_HABITACION
-        description: 
+        description: ""
       - name: TIPO
-        description: 
+        description: ""
       - name: ESTADO
-        description: 
+        description: ""
       - name: PRECIO_NOCHE
-        description: 
+        description: ""
       - name: CAPACIDAD_MAXIMA
-        description: 
+        description: ""
       - name: DESCRIPCION
-        description: 
+        description: ""
 
-  
+  - name: stg_hotel_raw_hotel
+    description: "Modelo de staging la tabla hotel."
+    columns: 
+      - name: ID_HOTEL
+        description: "ID unico de la tabla hotel"
+        data_tests:
+          - unique
+          - not_null
+      - name: NOMBRE
+      - name: DIRECCION
+      - name: CIUDAD
+      - name: PAIS
+      - name: TELEFONO
+      - name: EMAIL
+      - name: FECHA_CREACION
+      - name: ACTIVO
+      - name: CATEGORIA
+
+  - name: stg_hotel_raw_pago
+    description: "Modelo de staging la tabla pago."
+    columns: 
+      - name: ID_PAGO
+        description: "ID unico de la tabla pago"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_RESERVA
+      - name: FECHA_PAGO
+      - name: MONTO_TOTAL
+      - name: FORMA_PAGO
+      - name: ESTADO_PAGO
+      - name: REFERENCIA_PAGO
+
+  - name: stg_hotel_raw_recepcionista
+    description: "Modelo de staging la tabla recepcionista."
+    columns: 
+      - name: ID_RECEPCIONISTA
+        description: "ID unico de la tabla recepcionista"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_HOTEL
+      - name: NOMBRE
+      - name: EMAIL
+      - name: PASSWORD_HASH
+      - name: TELEFONO
+      - name: FECHA_CONTRATACION
+      - name: ACTIVO
+
+  - name: stg_hotel_raw_reserva
+    description: "Modelo de staging la tabla reserva."
+    columns: 
+      - name: ID_RESERVA
+        description: "ID unico de la tabla reserva"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_CLIENTE
+      - name: CANAL_RESERVA
+      - name: ID_HABITACION
+      - name: FECHA_RESERVA
+      - name: FECHA_CHECKIN
+      - name: FECHA_CHECKOUT
+      - name: NUMERO_HUESPEDES
+      - name: ESTADO_RESERVA
+      - name: NOTAS
+
+      
+  - name: stg_hotel_raw_servicio
+    description: "Modelo de staging la tabla servicio."
+    columns: 
+      - name: ID_SERVICIO
+        description: "ID unico de la tabla servicio"
+        data_tests:
+          - unique
+          - not_null 
+      - name: NOMBRE_SERVICIO
+      - name: CATEGORIA
+      - name: DESCRIPCION
+      - name: PRECIO_UNITARIO
+      - name: ACTIVO
+
+  - name: stg_hotel_raw_turno
+    description: "Modelo de staging la tabla turno."
+    columns: 
+      - name: ID_TURNO
+        description: "ID unico de la tabla turno"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_RECEPCIONISTA
+      - name: FECHA_INICIO
+      - name: FECHA_FIN
