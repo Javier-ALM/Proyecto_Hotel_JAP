@@ -1,0 +1,178 @@
+version: 2
+
+models:
+  - name: stg_hotel_raw_cama
+    description: "Tabla de staging de CAMAS"
+    columns: 
+      - name: ID_CAMA
+        description: "Clave primaria de la tabla camas"
+        data_tests:
+          - unique
+          - not_null  
+      - name: ID_HABITACION
+        description: "ID que identifica la habitacion"      
+      - name: TIPO_CAMA
+        description: "columna que muerta el tipo de cama"
+
+
+  - name: stg_hotel_raw_cliente
+    description: "Modelo de staging para clientes. cambiamos C1-C8 por el nombre real de la columna"
+    columns: 
+      - name: id_cliente
+        description: "ID único del cliente (era C1 en el CSV)"
+        data_tests:
+          - unique
+          - not_null      
+      - name: nombre
+        description: "Nombre del cliente (era el C2 en el CSV)"      
+      - name: dni_pasaporte
+        description: "Dni/pasaporte del cliente (era el c3 en el CSV)"
+      - name: nacionalidad
+        description: "Nacionalidad del cliente (era c4 en el CSV)"
+      - name: direccion
+        description: "Direccion del cliente (era c5 en el CSV)"
+      - name: email
+        description: "Email del cliente (era c6 en el CSV)"
+      - name: telefono
+        description: "Telefono del cliente (era c7 en el CSV)"
+      - name: fecha_registro
+        description: "Fecha de registro del cliente en el sistema (era c8 en el CSV)"
+
+
+  - name: stg_hotel_raw_consumo
+    description: "Modelo de staging para clientes. cambiamos C1-C8 por el nombre real de la columna"
+    columns: 
+      - name: id_concumo
+        description: "ID único del consumo"
+        data_tests:
+          - unique
+          - not_null 
+      - name: ID_RESERVA
+        description: "Id de la reserva a la que esta relacionado el consumo"
+      - name: ID_SERVICIO
+        description: ""
+      - name: FECHA_CONSUMO
+        description: "Fecha en la que se realizo el consumo"
+      - name: CANTIDAD
+        description: "Cantidad consumida"
+      - name: SUBTOTAL
+        description: ""
+
+  - name: stg_hotel_raw_habitacion
+    description: "Modelo de staging la tabla habitacion."
+    columns: 
+      - name: id_habitacion
+        description: "ID unico de la tabla habitacion"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_HABITACION
+        description: ""
+      - name: ID_HOTEL
+        description: ""
+      - name: NUMERO_HABITACION
+        description: ""
+      - name: TIPO
+        description: ""
+      - name: ESTADO
+        description: ""
+      - name: PRECIO_NOCHE
+        description: ""
+      - name: CAPACIDAD_MAXIMA
+        description: ""
+      - name: DESCRIPCION
+        description: ""
+
+  - name: stg_hotel_raw_hotel
+    description: "Modelo de staging la tabla hotel."
+    columns: 
+      - name: ID_HOTEL
+        description: "ID unico de la tabla hotel"
+        data_tests:
+          - unique
+          - not_null
+      - name: NOMBRE
+      - name: DIRECCION
+      - name: CIUDAD
+      - name: PAIS
+      - name: TELEFONO
+      - name: EMAIL
+      - name: FECHA_CREACION
+      - name: ACTIVO
+      - name: CATEGORIA
+
+  - name: stg_hotel_raw_pago
+    description: "Modelo de staging la tabla pago."
+    columns: 
+      - name: ID_PAGO
+        description: "ID unico de la tabla pago"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_RESERVA
+      - name: FECHA_PAGO
+      - name: MONTO_TOTAL
+      - name: FORMA_PAGO
+      - name: ESTADO_PAGO
+      - name: REFERENCIA_PAGO
+
+  - name: stg_hotel_raw_recepcionista
+    description: "Modelo de staging la tabla recepcionista."
+    columns: 
+      - name: ID_RECEPCIONISTA
+        description: "ID unico de la tabla recepcionista"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_HOTEL
+      - name: NOMBRE
+      - name: EMAIL
+      - name: PASSWORD_HASH
+      - name: TELEFONO
+      - name: FECHA_CONTRATACION
+      - name: ACTIVO
+
+  - name: stg_hotel_raw_reserva
+    description: "Modelo de staging la tabla reserva."
+    columns: 
+      - name: ID_RESERVA
+        description: "ID unico de la tabla reserva"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_CLIENTE
+      - name: CANAL_RESERVA
+      - name: ID_HABITACION
+      - name: FECHA_RESERVA
+      - name: FECHA_CHECKIN
+      - name: FECHA_CHECKOUT
+      - name: NUMERO_HUESPEDES
+      - name: ESTADO_RESERVA
+      - name: NOTAS
+
+      
+  - name: stg_hotel_raw_servicio
+    description: "Modelo de staging la tabla servicio."
+    columns: 
+      - name: ID_SERVICIO
+        description: "ID unico de la tabla servicio"
+        data_tests:
+          - unique
+          - not_null 
+      - name: NOMBRE_SERVICIO
+      - name: CATEGORIA
+      - name: DESCRIPCION
+      - name: PRECIO_UNITARIO
+      - name: ACTIVO
+
+  - name: stg_hotel_raw_turno
+    description: "Modelo de staging la tabla turno."
+    columns: 
+      - name: ID_TURNO
+        description: "ID unico de la tabla turno"
+        data_tests:
+          - unique
+          - not_null
+      - name: ID_RECEPCIONISTA
+      - name: FECHA_INICIO
+      - name: FECHA_FIN
