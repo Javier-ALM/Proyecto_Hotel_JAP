@@ -13,9 +13,9 @@ transformacion AS (
         TRIM(NUMERO_HABITACION) AS numero_habitacion,
         UPPER(TRIM(TIPO)) AS tipo_habitacion,
         UPPER(TRIM(ESTADO)) AS estado_habitacion,
-        CAST(REGEXP_REPLACE(PRECIO_NOCHE, '[^0-9.]', '') AS DECIMAL(10,2)) As precio_noche,
+        CAST(CAST(REGEXP_REPLACE(PRECIO_NOCHE, '[^0-9.]', '') AS DECIMAL(10,2)) AS INTEGER) As precio_noche,
         CAST(CAPACIDAD_MAXIMA AS INTEGER) AS capacidad_maxima,
-        NULLIF(TRIM(DESCRIPCION), '') AS descripcion,
+        COALESCE(NULLIF(TRIM(DESCRIPCION), ''), 'Sin descripción disponible') AS descripcion,
         CURRENT_TIMESTAMP() AS _dbt_loaded_at
     FROM src_habitacion
 )

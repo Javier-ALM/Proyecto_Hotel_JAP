@@ -15,7 +15,6 @@ transformacion AS (
         UPPER(TRIM(PAIS)) AS pais,
         '+' || REGEXP_REPLACE(telefono, '[^0-9]', '') AS telefono,
         LOWER(TRIM(REGEXP_REPLACE(REGEXP_REPLACE(email, '_[0-9]+@', '@'), '[0-9]+\\.', '.'))) AS email,
-        --TRY_TO_DATE(LEFT(FECHA_CREACION, 10)) AS fecha_creacion,
         COALESCE(
             TRY_TO_DATE(LEFT(fecha_creacion, 10)),
             TRY_TO_DATE(fecha_creacion, 'YYYY/MM/DD'),
