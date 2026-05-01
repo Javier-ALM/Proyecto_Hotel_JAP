@@ -26,7 +26,7 @@ transformacion AS (
             WHEN UPPER(TRIM(activo)) IN ('0', 'FALSE', 'F', 'NO', 'N', '') THEN FALSE
             ELSE NULL
         END AS ACTIVO,
-        CAST(REGEXP_REPLACE(TRIM(categoria), '[^0-9]', '') AS INTEGER) AS categoria,
+        CAST(CAST(REGEXP_REPLACE(TRIM(categoria), '[^0-9]', '') AS INTEGER) / 10 AS INTEGER) AS categoria,
         CURRENT_TIMESTAMP() AS _dbt_loaded_at
     FROM src_hotel
 )
