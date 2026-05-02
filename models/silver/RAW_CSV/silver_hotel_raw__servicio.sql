@@ -4,7 +4,6 @@
 
 WITH limpieza_inicial AS (
     SELECT
-        -- Forzamos a TEXT antes de limpiar para evitar errores de compilación
         TRIM(id_servicio::TEXT)::INTEGER AS id_servicio,
         UPPER(TRIM(nombre_servicio::TEXT)) AS nombre_servicio,
         UPPER(TRIM(categoria::TEXT)) AS categoria,
@@ -16,7 +15,6 @@ WITH limpieza_inicial AS (
             ELSE TRIM(descripcion::TEXT)
         END AS descripcion,
         
-        -- Precio: a INTEGER para quitar los decimales (.00)
         TRY_TO_DECIMAL(REGEXP_REPLACE(precio_unitario::TEXT, '[^0-9.]', ''), 10, 2)::INTEGER AS precio_unitario,
         
         CASE
@@ -25,7 +23,6 @@ WITH limpieza_inicial AS (
             ELSE TRUE 
         END AS es_activo
 
-    -- REVISA AQUÍ: ¿En tu sources.yml es RAW_SERVICIO o RAW_SERVIVIO?
     FROM {{ source('hotel_raw', 'RAW_SERVICIO') }} 
     WHERE id_servicio IS NOT NULL
 ),
@@ -33,7 +30,6 @@ WITH limpieza_inicial AS (
 deduplicado AS (
     SELECT 
         *,
-        -- Deduplicamos por NOMBRE. Si hay dos IDs para el mismo servicio, se queda con el menor.
         ROW_NUMBER() OVER (
             PARTITION BY nombre_servicio 
             ORDER BY id_servicio ASC
