@@ -41,6 +41,9 @@ models:
       +database: HOTEL_DEV_SILVER_DB
       +schema: silver
       +materialized: view
+      staging:
+        +materialized: view
+    
     gold:
       +database: HOTEL_DEV_GOLD_DB
       +schema: gold

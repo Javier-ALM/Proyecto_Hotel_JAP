@@ -1,0 +1,194 @@
+iso_alfa_3,iso_alfa_2,nombre_pais
+AFG,AF,Afganistán
+ALB,AL,Albania
+DEU,DE,Alemania
+AND,AD,Andorra
+AGO,AO,Angola
+ATG,AG,Antigua y Barbuda
+SAU,SA,Arabia Saudita
+DZA,DZ,Argelia
+ARG,AR,Argentina
+ARM,AM,Armenia
+AUS,AU,Australia
+AUT,AT,Austria
+AZE,AZ,Azerbaiyán
+BHS,BS,Bahamas
+BGD,BD,Bangladesh
+BRB,BB,Barbados
+BHR,BH,Bahréin
+BEL,BE,Bélgica
+BLZ,BZ,Belice
+BEN,BJ,Benín
+BTN,BT,Bután
+BLR,BY,Bielorrusia
+MMR,MM,Myanmar
+BOL,BO,Bolivia
+BIH,BA,Bosnia y Herzegovina
+BWA,BW,Botsuana
+BRA,BR,Brasil
+BRN,BN,Brunéi
+BGR,BG,Bulgaria
+BFA,BF,Burkina Faso
+BDI,BI,Burundi
+CPV,CV,Cabo Verde
+KHM,KH,Camboya
+CMR,CM,Camerún
+CAN,CA,Canadá
+QAT,QA,Catar
+TCD,TD,Chad
+CHL,CL,Chile
+CHN,CN,China
+CYP,CY,Chipre
+COL,CO,Colombia
+COM,KM,Comoras
+COG,CG,Congo
+COD,CD,Congo (Rep. Dem.)
+KOR,KR,Corea (Rep.)
+PRK,KP,Corea (Rep. Dem.)
+CIV,CI,Costa de Marfil
+CRI,CR,Costa Rica
+HRV,HR,Croacia
+CUB,CU,Cuba
+DNK,DK,Dinamarca
+DMA,DM,Dominica
+ECU,EC,Ecuador
+EGY,EG,Egipto
+SLV,SV,El Salvador
+ARE,AE,Emiratos Árabes Unidos
+ERI,ER,Eritrea
+SVK,SK,Eslovaquia
+SVN,SI,Eslovenia
+ESP,ES,España
+USA,US,Estados Unidos
+EST,EE,Estonia
+ETH,ET,Etiopía
+PHL,PH,Filipinas
+FIN,FI,Finlandia
+FJI,FJ,Fiyi
+FRA,FR,Francia
+GAB,GA,Gabón
+GMB,GM,Gambia
+GEO,GE,Georgia
+GHA,GH,Ghana
+GRD,GD,Granada
+GRC,GR,Grecia
+GTM,GT,Guatemala
+GIN,GN,Guinea
+GNB,GW,Guinea-Bissau
+GNQ,GQ,Guinea Ecuatorial
+GUY,GY,Guyana
+HTI,HT,Haití
+HND,HN,Honduras
+HUN,HU,Hungría
+IND,IN,India
+IDN,ID,Indonesia
+IRQ,IQ,Irak
+IRN,IR,Irán
+IRL,IE,Irlanda
+ISL,IS,Islandia
+ISR,IL,Israel
+ITA,IT,Italia
+JAM,JM,Jamaica
+JPN,JP,Japón
+JOR,JO,Jordania
+KAZ,KZ,Kazajistán
+KEN,KE,Kenia
+KGZ,KG,Kirguistán
+KIR,KI,Kiribati
+KWT,KW,Kuwait
+LAO,LA,Laos
+LSO,LS,Lesoto
+LVA,LV,Letonia
+LBN,LB,Líbano
+LBR,LR,Liberia
+LBY,LY,Libia
+LIE,LI,Liechtenstein
+LTU,LT,Lituania
+LUX,LU,Luxemburgo
+MKD,MK,Macedonia del Norte
+MDG,MG,Madagascar
+MYS,MY,Malasia
+MWI,MW,Malaui
+MDV,MV,Maldivas
+MLI,ML,Malí
+MLT,MT,Malta
+MAR,MA,Marruecos
+MUS,MU,Mauricio
+MRT,MR,Mauritania
+MEX,MX,México
+FSM,FM,Micronesia
+MDA,MD,Moldavia
+MCO,MC,Mónaco
+MNG,MN,Mongolia
+MNE,ME,Montenegro
+MOZ,MZ,Mozambique
+NAM,NA,Namibia
+NRU,NR,Nauru
+NPL,NP,Nepal
+NIC,NI,Nicaragua
+NER,NE,Níger
+NGA,NG,Nigeria
+NOR,NO,Noruega
+NZL,NZ,Nueva Zelanda
+OMN,OM,Omán
+NLD,NL,Países Bajos
+PAK,PK,Pakistán
+PLW,PW,Palaos
+PAN,PA,Panamá
+PNG,PG,Papúa Nueva Guinea
+PRY,PY,Paraguay
+PER,PE,Perú
+POL,PL,Polonia
+PRT,PT,Portugal
+GBR,GB,Reino Unido
+CAF,CF,República Centroafricana
+CZE,CZ,República Checa
+DOM,DO,República Dominicana
+RWA,RW,Ruanda
+ROU,RO,Rumanía
+RUS,RU,Rusia
+SLB,SB,Islas Salomón
+WSM,WS,Samoa
+KNA,KN,San Cristóbal y Nieves
+SMR,SM,San Marino
+VCT,VC,San Vicente y las Granadinas
+LCA,LC,Santa Lucía
+STP,ST,Santo Tomé y Príncipe
+SEN,SN,Senegal
+SRB,RS,Serbia
+SYC,SC,Seychelles
+SLE,SL,Sierra Leona
+SGP,SG,Singapur
+SYR,SY,Siria
+SOM,SO,Somalia
+LKA,LK,Sri Lanka
+ZAF,ZA,Sudáfrica
+SDN,SD,Sudán
+SSD,SS,Sudán del Sur
+SWE,SE,Suecia
+CHE,CH,Suiza
+SUR,SR,Surinam
+SWZ,SZ,Esuatini
+THA,TH,Tailandia
+TZA,TZ,Tanzania
+TJK,TJ,Tayikistán
+TLS,TL,Timor Oriental
+TGO,TG,Togo
+TON,TO,Tonga
+TTO,TT,Trinidad y Tobago
+TUN,TN,Túnez
+TKM,TM,Turkmenistán
+TUR,TR,Turquía
+TUV,TV,Tuvalu
+UKR,UA,Ucrania
+UGA,UG,Uganda
+URY,UY,Uruguay
+UZB,UZ,Uzbekistán
+VUT,VU,Vanuatu
+VAT,VA,Vaticano
+VEN,VE,Venezuela
+VNM,VN,Vietnam
+YEM,YE,Yemen
+DJI,DJ,Yibuti
+ZMB,ZM,Zambia
+ZWE,ZW,Zimbabue

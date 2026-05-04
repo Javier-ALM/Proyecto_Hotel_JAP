@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_hotel_raw_cama
+  - name: stg_hotel_stg__cama
     description: "Tabla de staging de CAMAS"
     columns: 
       - name: ID_CAMA
@@ -15,7 +15,7 @@ models:
         description: "columna que muerta el tipo de cama"
 
 
-  - name: stg_hotel_raw_cliente
+  - name: stg_hotel_stg__cliente
     description: "Modelo de staging para clientes. cambiamos C1-C8 por el nombre real de la columna"
     columns: 
       - name: id_cliente
@@ -39,7 +39,7 @@ models:
         description: "Fecha de registro del cliente en el sistema (era c8 en el CSV)"
 
 
-  - name: stg_hotel_raw_consumo
+  - name: stg_hotel_stg__consumo
     description: "Modelo de staging para clientes. cambiamos C1-C8 por el nombre real de la columna"
     columns: 
       - name: id_concumo
@@ -58,7 +58,7 @@ models:
       - name: SUBTOTAL
         description: ""
 
-  - name: stg_hotel_raw_habitacion
+  - name: stg_hotel_stg__habitacion
     description: "Modelo de staging la tabla habitacion."
     columns: 
       - name: id_habitacion
@@ -83,7 +83,7 @@ models:
       - name: DESCRIPCION
         description: ""
 
-  - name: stg_hotel_raw_hotel
+  - name: stg_hotel_stg__hotel
     description: "Modelo de staging la tabla hotel."
     columns: 
       - name: ID_HOTEL
@@ -101,7 +101,7 @@ models:
       - name: ACTIVO
       - name: CATEGORIA
 
-  - name: stg_hotel_raw_pago
+  - name: stg_hotel_stg__pago
     description: "Modelo de staging la tabla pago."
     columns: 
       - name: ID_PAGO
@@ -116,7 +116,7 @@ models:
       - name: ESTADO_PAGO
       - name: REFERENCIA_PAGO
 
-  - name: stg_hotel_raw_recepcionista
+  - name: stg_hotel_stg__recepcionista
     description: "Modelo de staging la tabla recepcionista."
     columns: 
       - name: ID_RECEPCIONISTA
@@ -132,7 +132,7 @@ models:
       - name: FECHA_CONTRATACION
       - name: ACTIVO
 
-  - name: stg_hotel_raw_reserva
+  - name: stg_hotel_stg__reserva
     description: "Modelo de staging la tabla reserva."
     columns: 
       - name: ID_RESERVA
@@ -151,7 +151,7 @@ models:
       - name: NOTAS
 
       
-  - name: stg_hotel_raw_servicio
+  - name: stg_hotel_stg__servicio
     description: "Modelo de staging la tabla servicio."
     columns: 
       - name: ID_SERVICIO
@@ -165,7 +165,7 @@ models:
       - name: PRECIO_UNITARIO
       - name: ACTIVO
 
-  - name: stg_hotel_raw_turno
+  - name: stg_hotel_stg__turno
     description: "Modelo de staging la tabla turno."
     columns: 
       - name: ID_TURNO
