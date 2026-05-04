@@ -1,0 +1,103 @@
+version: 2
+
+models:
+  - name: dim_clientes
+    description: "Dimensión maestra de clientes con su nacionalidad enriquecida vía Seed."
+    config:
+      contract:
+        enforced: true 
+    columns:
+      - name: id_cliente
+        data_type: integer
+        constraints:
+          - type: not_null
+          - type: primary_key
+        tests:
+          - unique
+          - not_null         
+      - name: nombre_completo
+        data_type: varchar
+      - name: dni_pasaporte
+        data_type: varchar
+      - name: email
+        data_type: varchar
+      - name: telefono
+        data_type: varchar
+      - name: direccion
+        data_type: varchar
+      - name: nacionalidad
+        data_type: varchar
+      - name: fecha_registro
+        data_type: date
+      - name: dias_desde_registro
+        data_type: integer
+      - name: codigo_pais_iso2
+        data_type: varchar
+      - name: codigo_pais_iso3
+        data_type: varchar
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
+
+  - name: dim_hoteles
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id_hotel
+        data_type: integer
+      - name: nombre_hotel
+        data_type: varchar
+      - name: direccion
+        data_type: varchar
+      - name: ciudad
+        data_type: varchar
+      - name: pais_nombre
+        data_type: varchar
+      - name: pais_codigo_iso3
+        data_type: varchar
+      - name: telefono
+        data_type: varchar
+      - name: email
+        data_type: varchar
+      - name: fecha_creacion
+        data_type: date
+      - name: es_activo
+        data_type: boolean
+      - name: estrellas
+        data_type: integer
+      - name: segmento_hotel
+        data_type: varchar
+      - name: anios_operativo
+        data_type: integer
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
+
+
+  - name: dim_tiempo
+    description: "Tabla de calendario dinámica para análisis temporal."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: fecha
+        data_type: date
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: anio
+        data_type: number
+      - name: mes
+        data_type: number
+      - name: nombre_mes
+        data_type: varchar
+      - name: dia
+        data_type: number
+      - name: dia_semana
+        data_type: number
+      - name: nombre_dia
+        data_type: varchar
+      - name: trimestre
+        data_type: number
+      - name: es_fin_de_semana
+        data_type: boolean
+        
