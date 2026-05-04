@@ -1,7 +1,10 @@
 {{ config(
     materialized='table',
     database='HOTEL_DEV_GOLD_DB',
-    schema='dimensiones'
+    schema='dimensiones',
+    config={
+      "contract": {"enforced": true}
+    }
 ) }}
 
 WITH generador_filas AS (
@@ -18,7 +21,9 @@ base_fechas AS (
 
 final AS (
     SELECT
-        fecha_raw AS fecha,
+        -- EL FIX: Forzamos el tipo DATE para cumplir el contrato
+        CAST(fecha_raw AS DATE) AS fecha,
+        
         EXTRACT(year FROM fecha_raw) AS anio,
         EXTRACT(month FROM fecha_raw) AS mes,
         
@@ -33,10 +38,11 @@ final AS (
         DAYOFWEEK(fecha_raw) AS dia_semana,
         
         CASE DAYOFWEEK(fecha_raw)
-            WHEN 1 THEN 'Lunes' WHEN 2 THEN 'Martes' WHEN 3 THEN 'Miércoles'
-            WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 6 THEN 'Sábado' WHEN 0 THEN 'Domingo'
-        
+            WHEN 1 THEN 'Lunes' WHEN 2 THEN 'Martes' WHEN 3 THEN 'Miercoles'
+            WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 6 THEN 'Sabado' 
+            WHEN 0 THEN 'Domingo'
         END AS nombre_dia,
+        
         EXTRACT(quarter FROM fecha_raw) AS trimestre,
         CASE WHEN DAYOFWEEK(fecha_raw) IN (6, 0) THEN TRUE ELSE FALSE END AS es_fin_de_semana
     FROM base_fechas
