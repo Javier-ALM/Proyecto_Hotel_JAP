@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: dim_clientes
+    description: "Dimensión maestra de clientes con su nacionalidad enriquecida vía Seed."
+    config:
+      contract:
+        enforced: true 
+    columns:
+      - name: id_cliente
+        data_type: integer
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: nombre_completo
+        data_type: varchar
+      - name: email
+        data_type: varchar
+      - name: nacionalidad
+        data_type: varchar
+      - name: codigo_pais_iso2
+        data_type: varchar
+      - name: codigo_pais_iso3
+        data_type: varchar
+
+  - name: dim_tiempo
+    description: "Tabla de calendario dinámica para análisis temporal."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: fecha
+        data_type: date
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: anio
+        data_type: number
+      - name: mes
+        data_type: number
+      - name: nombre_mes
+        data_type: varchar
+      - name: dia
+        data_type: number
+      - name: dia_semana
+        data_type: number
+      - name: nombre_dia
+        data_type: varchar
+      - name: trimestre
+        data_type: number
+      - name: es_fin_de_semana
+        data_type: boolean
