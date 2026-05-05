@@ -1,0 +1,153 @@
+version: 2
+
+models:
+  # =========================================================
+  # DIMENSIÓN CLIENTES
+  # =========================================================
+  - name: dim_clientes
+    description: "Maestra de clientes con limpieza de nombres y normalización de nacionalidad vía Seed."
+    columns:
+      - name: id_cliente
+        data_type: integer
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_completo
+        data_type: varchar
+      - name: dni_pasaporte
+        data_type: varchar
+      - name: email
+        data_type: varchar
+      - name: telefono
+        data_type: varchar
+      - name: direccion
+        data_type: varchar
+      - name: fecha_registro
+        data_type: date
+      - name: dias_desde_registro
+        data_type: integer
+      - name: nacionalidad
+        data_type: varchar
+      - name: codigo_pais_iso2
+        data_type: varchar
+      - name: codigo_pais_iso3
+        data_type: varchar
+      - name: _dbt_updated_at
+        data_type: timestamp_ntz
+
+  # =========================================================
+  # DIMENSIÓN HOTELES
+  # =========================================================
+  - name: dim_hoteles
+    description: "Maestra de hoteles con enriquecimiento de país y segmentación de negocio."
+    columns:
+      - name: id_hotel
+        data_type: integer
+        data_tests:
+          - unique
+          - not_null
+      - name: nombre_hotel
+        data_type: varchar
+      - name: direccion
+        data_type: varchar
+      - name: ciudad
+        data_type: varchar
+      - name: pais_nombre
+        data_type: varchar
+      - name: pais_codigo_iso3
+        data_type: varchar
+      - name: telefono
+        data_type: varchar
+      - name: email
+        data_type: varchar
+      - name: fecha_creacion
+        data_type: date
+      - name: es_activo
+        data_type: boolean
+      - name: estrellas
+        data_type: integer
+      - name: segmento_hotel
+        data_type: varchar
+      - name: anios_operativo
+        data_type: integer
+      - name: _dbt_updated_at
+        data_type: timestamp_ntz
+
+  # =========================================================
+  # DIMENSIÓN TIEMPO
+  # =========================================================
+  - name: dim_tiempo
+    description: "Tabla de calendario dinámica generada por dbt."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: fecha
+        data_type: date
+        data_tests:
+          - unique
+          - not_null
+      - name: anio
+        data_type: integer
+      - name: mes
+        data_type: integer
+      - name: nombre_mes
+        data_type: varchar
+      - name: dia
+        data_type: integer
+      - name: dia_semana
+        data_type: integer
+      - name: nombre_dia
+        data_type: varchar
+      - name: trimestre
+        data_type: integer
+      - name: es_fin_de_semana
+        data_type: boolean
+
+  # =========================================================
+  # DIMENSIÓN HABITACIONES
+  # =========================================================
+  - name: dim_habitaciones
+    description: "Maestra de habitaciones. Regla: >250 PREMIUM, <150 ECONOMICO."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id_habitacion
+        data_type: integer # Coincide con NUMBER(38,0)
+        data_tests:
+          - unique
+          - not_null
+      - name: id_hotel
+        data_type: integer # Coincide con NUMBER(38,0)
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_hoteles')
+                field: id_hotel
+      - name: nombre_hotel
+        data_type: varchar # Viene del JOIN en tu SQL
+      - name: numero_habitacion
+        data_type: varchar # Coincide con VARCHAR(16777216)
+      - name: tipo_habitacion
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              values: ['SUITE', 'DOBLE', 'INDIVIDUAL', 'DELUXE']
+      - name: estado_habitacion
+        data_type: varchar
+      - name: precio_noche
+        data_type: integer # Coincide con NUMBER(38,0)
+      - name: capacidad_maxima
+        data_type: integer # Coincide con NUMBER(38,0)
+      - name: descripcion
+        data_type: varchar
+      - name: detalle_camas
+        data_type: varchar
+      - name: cantidad_camas
+        data_type: integer # Coincide con NUMBER(18,0)
+      - name: categoria_precio
+        data_type: varchar # Calculada en tu SQL
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz # AJUSTE: Snowflake usa LTZ por defecto
