@@ -1,20 +1,17 @@
 version: 2
 
 models:
+  # =========================================================
+  # DIMENSIÓN CLIENTES
+  # =========================================================
   - name: dim_clientes
-    description: "Dimensión maestra de clientes con su nacionalidad enriquecida vía Seed."
-    config:
-      contract:
-        enforced: true 
+    description: "Maestra de clientes con limpieza de nombres y normalización de nacionalidad vía Seed."
     columns:
       - name: id_cliente
         data_type: integer
-        constraints:
-          - type: not_null
-          - type: primary_key
-        tests:
-          - unique
-          - not_null         
+        data_tests:
+          - unique    # TEST 1
+          - not_null  # TEST 2
       - name: nombre_completo
         data_type: varchar
       - name: dni_pasaporte
@@ -25,26 +22,35 @@ models:
         data_type: varchar
       - name: direccion
         data_type: varchar
-      - name: nacionalidad
-        data_type: varchar
       - name: fecha_registro
         data_type: date
       - name: dias_desde_registro
         data_type: integer
+      - name: nacionalidad
+        data_type: varchar
       - name: codigo_pais_iso2
         data_type: varchar
       - name: codigo_pais_iso3
         data_type: varchar
+        data_tests:
+          - relationships:    # TEST 3
+              arguments: 
+                to: ref('paises_iso')
+                field: iso_alfa_3
       - name: _dbt_updated_at
         data_type: timestamp_ltz
 
+  # =========================================================
+  # DIMENSIÓN HOTELES
+  # =========================================================
   - name: dim_hoteles
-    config:
-      contract:
-        enforced: true
+    description: "Maestra de hoteles con enriquecimiento de país y segmentación de negocio."
     columns:
       - name: id_hotel
         data_type: integer
+        data_tests:
+          - unique    # TEST 1
+          - not_null  # TEST 2
       - name: nombre_hotel
         data_type: varchar
       - name: direccion
@@ -55,6 +61,11 @@ models:
         data_type: varchar
       - name: pais_codigo_iso3
         data_type: varchar
+        data_tests:
+          - relationships:    #TEST 3
+              arguments: 
+                to: ref('paises_iso')
+                field: iso_alfa_3
       - name: telefono
         data_type: varchar
       - name: email
@@ -66,38 +77,85 @@ models:
       - name: estrellas
         data_type: integer
       - name: segmento_hotel
+        description: "Clasificación comercial del hotel basada en sus estrellas."
         data_type: varchar
+        data_tests:
+          - accepted_values:    # TEST 4
+              arguments: 
+                values: ['Lujo', 'Estandar', 'Economico']
       - name: anios_operativo
         data_type: integer
       - name: _dbt_updated_at
-        data_type: timestamp_ltz
+        data_type: timestamp_ntz
 
-
+  # =========================================================
+  # DIMENSIÓN TIEMPO
+  # =========================================================
   - name: dim_tiempo
-    description: "Tabla de calendario dinámica para análisis temporal."
+    description: "Tabla de calendario dinámica generada por dbt."
     config:
       contract:
         enforced: true
     columns:
       - name: fecha
         data_type: date
-        constraints:
-          - type: not_null
-          - type: primary_key
+        data_tests:
+          - unique    # TEST 1
+          - not_null  # TEST 2
       - name: anio
-        data_type: number
+        data_type: integer
       - name: mes
-        data_type: number
+        data_type: integer
       - name: nombre_mes
         data_type: varchar
       - name: dia
-        data_type: number
+        data_type: integer
       - name: dia_semana
-        data_type: number
+        data_type: integer
       - name: nombre_dia
         data_type: varchar
       - name: trimestre
-        data_type: number
+        data_type: integer
       - name: es_fin_de_semana
         data_type: boolean
-        
+
+  # =========================================================
+  # DIMENSIÓN HABITACIONES
+  # =========================================================
+  - name: dim_habitaciones
+    description: "Maestra de habitaciones con los 4 tests genéricos activos."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id_habitacion
+        data_type: integer
+        data_tests:
+          - unique    # TEST 1
+          - not_null  # TEST 2
+
+      - name: id_hotel
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships: # TEST 3
+              arguments:
+                to: ref('dim_hoteles')
+                field: id_hotel
+
+      - name: tipo_habitacion
+        data_type: varchar
+        data_tests:
+          - accepted_values: # TEST 4
+              arguments:
+                values: ['SUITE', 'DOBLE', 'INDIVIDUAL', 'DELUXE']
+
+      - name: categoria_precio
+        data_type: varchar
+        data_tests:
+          - accepted_values:    # TEST 4
+              arguments:
+                values: ['PREMIUM', 'ECONOMICO', 'ESTANDAR']
+
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
