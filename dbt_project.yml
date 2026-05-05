@@ -48,6 +48,12 @@ models:
       +database: HOTEL_DEV_GOLD_DB
       +schema: gold
       +materialized: table
+      dimensiones:
+        +tags: ["dimension"]
+      hechos:
+        +tags: ["fact"]
+      mart:
+        +tags: ["casos_negocio"]
 
 seeds: 
   Proyecto_Hotel_JAP:

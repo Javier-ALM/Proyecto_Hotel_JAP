@@ -21,7 +21,6 @@ base_fechas AS (
 
 final AS (
     SELECT
-        -- EL FIX: Forzamos el tipo DATE para cumplir el contrato
         CAST(fecha_raw AS DATE) AS fecha,
         
         EXTRACT(year FROM fecha_raw) AS anio,
