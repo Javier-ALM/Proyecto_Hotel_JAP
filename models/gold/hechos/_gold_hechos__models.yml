@@ -1,0 +1,121 @@
+version: 2
+
+models:
+  # =========================================================
+  # FCT_RESERVAS: El núcleo de la actividad del hotel
+  # =========================================================
+  - name: fct_reservas
+    description: "Tabla de hechos principal de reservas. Incluye el ID_HOTEL denormalizado desde habitaciones para analítica directa."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id_reserva
+        data_type: integer
+        data_tests:
+          - unique           # TEST 1
+          - not_null         # TEST 2
+      - name: id_cliente
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships:   # TEST 3
+              arguments: {to: ref('dim_clientes'), field: id_cliente}
+      - name: id_hotel
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships:   # TEST 3
+              arguments: {to: ref('dim_hoteles'), field: id_hotel}
+      - name: id_habitacion
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships:   # TEST 3
+              arguments: {to: ref('dim_habitaciones'), field: id_habitacion}
+      - name: canal_reserva
+        data_type: varchar
+      - name: fecha_checkin
+        data_type: date
+      - name: fecha_checkout
+        data_type: date
+      - name: numero_huespedes
+        data_type: integer
+      - name: estado_reserva
+        data_type: varchar
+        data_tests:
+          - accepted_values: # TEST 4
+              arguments:
+                values: ['CONFIRMADA', 'CANCELADA', 'CHECK-IN', 'CHECK-OUT']
+      - name: noches_estancia
+        data_type: integer
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
+
+  # =========================================================
+  # FCT_PAGOS: Seguimiento financiero y cobros
+  # =========================================================
+  - name: fct_pagos
+    description: "Hechos de pagos recibidos. Se relaciona directamente con la reserva."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id_pago
+        data_type: integer
+        data_tests: [unique, not_null]
+      - name: id_reserva
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships:   # TEST 3
+              arguments: {to: ref('fct_reservas'), field: id_reserva}
+      - name: fecha_pago
+        data_type: date
+      - name: monto_total
+        data_type: decimal(10,2)
+      - name: forma_pago
+        data_type: varchar
+        data_tests:
+          - accepted_values: # TEST 4
+              arguments:
+                values: ['TARJETA', 'EFECTIVO', 'TRANSFERENCIA', 'PAGO_ONLINE']
+      - name: estado_pago
+        data_type: varchar
+      - name: referencia_pago
+        data_type: varchar
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
+
+  # =========================================================
+  # FCT_CONSUMOS: Ingresos por servicios adicionales
+  # =========================================================
+  - name: fct_consumos
+    description: "Detalle de servicios consumidos. El ID_SERVICIO ya viene como integer desde Silver."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id_consumo
+        data_type: integer
+        data_tests: [unique, not_null]
+      - name: id_reserva
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships: 
+              arguments: {to: ref('fct_reservas'), field: id_reserva}
+      - name: id_servicio
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships:   # TEST 3
+              arguments: {to: ref('dim_servicio'), field: id_servicio}
+      - name: fecha_consumo
+        data_type: date
+      - name: cantidad
+        data_type: decimal(10,2)
+      - name: importe_consumo
+        data_type: decimal(10,2)
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
