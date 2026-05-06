@@ -143,12 +143,36 @@ models:
                 to: ref('dim_hoteles')
                 field: id_hotel
 
+      - name: nombre_hotel
+        data_type: varchar
+
+      - name: numero_habitacion
+        data_type: varchar
+
       - name: tipo_habitacion
         data_type: varchar
         data_tests:
           - accepted_values: # TEST 4
               arguments:
                 values: ['SUITE', 'DOBLE', 'INDIVIDUAL', 'DELUXE']
+
+      - name: estado_habitacion
+        data_type: varchar
+
+      - name: precio_noche
+        data_type: decimal(10,2)
+
+      - name: capacidad_maxima
+        data_type: integer
+
+      - name: descripcion
+        data_type: varchar
+
+      - name: detalle_camas
+        data_type: varchar
+
+      - name: cantidad_camas
+        data_type: integer
 
       - name: categoria_precio
         data_type: varchar
