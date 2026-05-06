@@ -1,11 +1,19 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
+    unique_key='id_reserva',
+    incremental_strategy='merge',
+    on_schema_change='append_new_columns',
     schema='hechos',
     contract={'enforced': true}
 ) }}
 
 WITH reservas AS (
     SELECT * FROM {{ ref('silver_hotel_stg__reserva') }}
+    
+    {% if is_incremental() %}
+      -- Filtro incremental: usamos COALESCE por si la tabla está vacía en la primera carga
+      WHERE _dbt_loaded_at > (SELECT COALESCE(MAX(_dbt_updated_at), '1900-01-01') FROM {{ this }})
+    {% endif %}
 ),
 
 habitaciones AS (
