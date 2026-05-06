@@ -30,7 +30,13 @@ SELECT
     r.fecha_checkout::DATE AS fecha_checkout,
     r.numero_huespedes::INTEGER AS numero_huespedes,
     r.estado_reserva::TEXT AS estado_reserva,
-    r.noches_estancia::INTEGER AS noches_estancia,
+
+    CASE 
+        WHEN r.fecha_checkout > r.fecha_checkin
+        THEN DATEDIFF(DAY, r.fecha_checkin, r.fecha_checkout)
+        ELSE 0
+    END::INTEGER AS noches_estancia,
+    
     r._dbt_loaded_at::TIMESTAMP_LTZ AS _dbt_updated_at
 FROM reservas r
 LEFT JOIN habitaciones h 
