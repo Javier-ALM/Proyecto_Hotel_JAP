@@ -17,7 +17,7 @@ transformacion AS (
     SELECT
         id_consumo::INTEGER AS id_consumo,
         id_reserva::INTEGER AS id_reserva,
-        TRIM(id_servicio::TEXT) AS id_servicio,
+        TRIM(id_servicio::TEXT)::INTEGER AS id_servicio,
 
         COALESCE (
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'YYYY/MM/DD'),

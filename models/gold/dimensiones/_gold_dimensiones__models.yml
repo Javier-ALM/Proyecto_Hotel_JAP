@@ -159,3 +159,56 @@ models:
 
       - name: _dbt_updated_at
         data_type: timestamp_ltz
+
+
+# =========================================================
+  # DIMENSIÓN SERVICIOS 
+  # =========================================================
+  - name: dim_servicio
+    description: "Maestra de servicios con contrato enforced."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id_servicio
+        data_type: integer
+        data_tests:
+          - unique           # TEST 1
+          - not_null         # TEST 2
+
+      - name: nombre_servicio
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:   # TEST 3 (Hacia tu nuevo Seed)
+              arguments:
+                to: ref('servicios')
+                field: nombre_servicio
+
+      - name: categoria
+        data_type: varchar
+        data_tests:
+          - not_null
+          - relationships:   # TEST 3 (Hacia tu nuevo Seed)
+              arguments:
+                to: ref('servicios')
+                field: categoria
+
+      - name: descripcion
+        data_type: varchar
+
+      - name: precio_unitario
+        data_type: integer
+
+      - name: es_activo
+        data_type: boolean
+
+      - name: categoria_precio_servicio
+        data_type: varchar
+        data_tests:
+          - accepted_values: # TEST 4
+              arguments:
+                values: ['PREMIUM', 'BASICO']
+
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
