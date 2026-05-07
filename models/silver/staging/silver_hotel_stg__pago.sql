@@ -21,7 +21,8 @@ transformacion AS (
         COALESCE(
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_pago::TEXT), 10), '[-]', '/'), 'YYYY/MM/DD'),
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_pago::TEXT), 10), '[-]', '/'), 'DD/MM/YYYY'),
-            TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_pago::TEXT), 10), '[-]', '/'), 'MM/DD/YYYY')
+            TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_pago::TEXT), 10), '[-]', '/'), 'MM/DD/YYYY'),
+            CURRENT_DATE()  -- CORREGIDO: agregado fallback
         ) AS fecha_pago,
 
         TRY_TO_DECIMAL(REGEXP_REPLACE(monto_total::TEXT, '[^0-9.]', ''), 10, 2) AS monto_total,

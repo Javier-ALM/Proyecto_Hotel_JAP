@@ -37,12 +37,14 @@ final_fechas AS (
         COALESCE(
             TRY_TO_DATE(fecha_checkin, 'YYYY/MM/DD'),
             TRY_TO_DATE(fecha_checkin, 'DD/MM/YYYY'),
-            TRY_TO_DATE(fecha_checkin, 'MM/DD/YYYY')
+            TRY_TO_DATE(fecha_checkin, 'MM/DD/YYYY'),
+            CURRENT_DATE()  -- CORREGIDO: agregado fallback
         ) AS fecha_checkin,
         COALESCE(
             TRY_TO_DATE(fecha_checkout, 'YYYY/MM/DD'),
             TRY_TO_DATE(fecha_checkout, 'DD/MM/YYYY'),
-            TRY_TO_DATE(fecha_checkout, 'MM/DD/YYYY')
+            TRY_TO_DATE(fecha_checkout, 'MM/DD/YYYY'),
+            DATEADD(day, 1, CURRENT_DATE())  -- CORREGIDO: agregado fallback (checkout = mañana)
         ) AS fecha_checkout
     FROM src_reserva
 )

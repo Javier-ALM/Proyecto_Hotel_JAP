@@ -15,7 +15,7 @@ transformacion AS (
         UPPER(TRIM(C4)) AS nacionalidad,
         CASE 
             WHEN TRIM(C5) = '' OR TRIM(C5) IS NULL OR UPPER(TRIM(C5)) IN ('N/A', 'NULL') 
-            THEN 'Dirección no disponible' 
+            THEN 'Direccion no disponible' 
             ELSE TRIM(C5) 
           END AS direccion,
         LOWER(TRANSLATE(
@@ -28,7 +28,7 @@ transformacion AS (
             TRY_TO_DATE(REGEXP_REPLACE(TRIM(C8), ' .*', ''), 'YYYY-MM-DD'),
             TRY_TO_DATE(REGEXP_REPLACE(TRIM(C8), ' .*', ''), 'DD/MM/YYYY'),
             TRY_TO_DATE(REGEXP_REPLACE(TRIM(C8), ' .*', ''), 'YYYY/MM/DD'),
-            TO_DATE('1900-01-01')
+            CURRENT_DATE()  -- CORREGIDO: antes era TO_DATE('1900-01-01')
           ) AS fecha_registro,
         
         CURRENT_TIMESTAMP() AS _dbt_loaded_at

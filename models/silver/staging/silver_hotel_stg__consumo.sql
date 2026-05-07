@@ -22,7 +22,8 @@ transformacion AS (
         COALESCE (
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'YYYY/MM/DD'),
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'DD/MM/YYYY'),
-            TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'MM/DD/YYYY')
+            TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'MM/DD/YYYY'),
+            CURRENT_DATE()  -- CORREGIDO: agregado fallback
         ) AS fecha_consumo,
 
         TRY_TO_DECIMAL(REGEXP_REPLACE(cantidad::TEXT, '[^0-9.]', ''), 10, 2) AS cantidad,
