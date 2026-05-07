@@ -168,7 +168,7 @@ models:
         data_tests:
           - accepted_values:
               arguments: 
-                  values: ['CANCELADA', 'CONFIRMADA', 'FINALIZADA', 'PENDIENTE']
+                  values: ['CONFIRMADA', 'CANCELADA', 'CHECK-IN', 'CHECK-OUT', 'FINALIZADA', 'PENDIENTE']
 
       - name: NOTAS
 

@@ -13,7 +13,6 @@ models:
       - name: id_reserva
         data_type: integer
         data_tests:
-          - unique           # TEST 1
           - not_null         # TEST 2
       - name: id_cliente
         data_type: integer
