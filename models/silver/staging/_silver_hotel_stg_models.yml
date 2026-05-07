@@ -69,7 +69,9 @@ models:
       - name: ID_HABITACION
         description: ""
       - name: ID_HOTEL
-        description: ""
+        description: "Clave para unir con hoteles. Si falla aquí, fallará en Gold."
+        data_tests:
+          - not_null        
       - name: NUMERO_HABITACION
         description: ""
       - name: TIPO
@@ -132,7 +134,7 @@ models:
       - name: FECHA_CONTRATACION
       - name: ACTIVO
 
-  - name: stg_hotel_stg__reserva
+  - name: silver_hotel_stg__reserva
     description: "Modelo de staging la tabla reserva."
     columns: 
       - name: ID_RESERVA
@@ -140,16 +142,45 @@ models:
         data_tests:
           - unique
           - not_null
+
       - name: ID_CLIENTE
-      - name: CANAL_RESERVA
+        data_tests:
+          - not_null          
+      
       - name: ID_HABITACION
-      - name: FECHA_RESERVA
+        description: "Si es nulo, no encontrará hotel en Gold."
+        data_tests:
+          - not_null          
+          - relationships:
+              arguments: 
+                to: ref('silver_hotel_stg__habitacion')
+                field: id_habitacion
+
+      - name: CANAL_RESERVA 
+
       - name: FECHA_CHECKIN
+
       - name: FECHA_CHECKOUT
+
       - name: NUMERO_HUESPEDES
+
       - name: ESTADO_RESERVA
+        data_tests:
+          - accepted_values:
+              arguments: 
+                  values: ['CANCELADA', 'CONFIRMADA', 'FINALIZADA', 'PENDIENTE']
+
       - name: NOTAS
 
+      - name: noches_estancia
+        data_tests:
+          - not_null          
+      
+      - name: FECHA_RESERVA
+
+      - name: _dbt_updated_at
+
+        data_type: timestamp_ltz  
       
   - name: stg_hotel_stg__servicio
     description: "Modelo de staging la tabla servicio."

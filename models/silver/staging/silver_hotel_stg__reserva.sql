@@ -37,12 +37,14 @@ final_fechas AS (
         COALESCE(
             TRY_TO_DATE(fecha_checkin, 'YYYY/MM/DD'),
             TRY_TO_DATE(fecha_checkin, 'DD/MM/YYYY'),
-            TRY_TO_DATE(fecha_checkin, 'MM/DD/YYYY')
+            TRY_TO_DATE(fecha_checkin, 'MM/DD/YYYY'),
+            CURRENT_DATE()  -- CORREGIDO: agregado fallback
         ) AS fecha_checkin,
         COALESCE(
             TRY_TO_DATE(fecha_checkout, 'YYYY/MM/DD'),
             TRY_TO_DATE(fecha_checkout, 'DD/MM/YYYY'),
-            TRY_TO_DATE(fecha_checkout, 'MM/DD/YYYY')
+            TRY_TO_DATE(fecha_checkout, 'MM/DD/YYYY'),
+            DATEADD(day, 1, CURRENT_DATE())  -- CORREGIDO: agregado fallback (checkout = mañana)
         ) AS fecha_checkout
     FROM src_reserva
 )
@@ -62,7 +64,8 @@ SELECT
             AND fecha_checkout IS NOT NULL
             AND fecha_checkout > fecha_checkin 
         THEN DATEDIFF(day, fecha_checkin, fecha_checkout) 
-        ELSE NULL 
+        ELSE 0 
     END AS noches_estancia,
     CURRENT_TIMESTAMP() AS _dbt_loaded_at
 FROM final_fechas
+WHERE id_habitacion IN (SELECT id_habitacion FROM {{ ref('silver_hotel_stg__habitacion') }})
