@@ -27,7 +27,11 @@ transformacion AS (
 
         TRY_TO_DECIMAL(REGEXP_REPLACE(monto_total::TEXT, '[^0-9.]', ''), 10, 2) AS monto_total,
         
-        UPPER(TRIM(forma_pago::TEXT)) AS forma_pago,
+        CASE
+            WHEN UPPER(TRIM(forma_pago)) = 'PAYPAL' THEN 'PAGO_ONLINE'
+            ELSE UPPER(TRIM(forma_pago))
+        END AS forma_pago,
+
         UPPER(TRIM(estado_pago::TEXT)) AS estado_pago,
         
         CASE 
@@ -44,3 +48,4 @@ transformacion AS (
 )
 
 SELECT * FROM transformacion
+WHERE id_reserva IN (SELECT id_reserva FROM {{ ref('silver_hotel_stg__reserva') }})

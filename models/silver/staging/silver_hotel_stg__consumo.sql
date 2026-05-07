@@ -37,3 +37,4 @@ transformacion AS (
 )
 
 SELECT * FROM transformacion
+WHERE id_reserva IN (SELECT id_reserva FROM {{ ref('silver_hotel_stg__reserva') }})

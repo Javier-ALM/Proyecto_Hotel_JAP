@@ -64,7 +64,8 @@ SELECT
             AND fecha_checkout IS NOT NULL
             AND fecha_checkout > fecha_checkin 
         THEN DATEDIFF(day, fecha_checkin, fecha_checkout) 
-        ELSE NULL 
+        ELSE 0 
     END AS noches_estancia,
     CURRENT_TIMESTAMP() AS _dbt_loaded_at
 FROM final_fechas
+WHERE id_habitacion IN (SELECT id_habitacion FROM {{ ref('silver_hotel_stg__habitacion') }})
