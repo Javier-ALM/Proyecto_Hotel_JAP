@@ -1,22 +1,20 @@
 {{ config(
     materialized='incremental',
-    unique_key='id_reserva',
-    incremental_strategy='merge',
+    incremental_strategy='append',
     on_schema_change='append_new_columns',
     schema='hechos',
     contract={'enforced': true}
 ) }}
 
-WITH reservas AS (
+WITH reservas_source AS (
     SELECT * FROM {{ ref('silver_hotel_stg__reserva') }}
     
     {% if is_incremental() %}
-      -- Filtro incremental: usamos COALESCE por si la tabla está vacía en la primera carga
-      WHERE _dbt_loaded_at > (SELECT COALESCE(MAX(_dbt_updated_at), '1900-01-01') FROM {{ this }})
+      WHERE _dbt_loaded_at > (SELECT COALESCE(MAX(_dbt_updated_at), '1900-01-01'::TIMESTAMP_LTZ) FROM {{ this }})
     {% endif %}
 ),
 
-habitaciones AS (
+habitaciones_dim AS (
     SELECT id_habitacion, id_hotel FROM {{ ref('dim_habitaciones') }}
 )
 
@@ -30,14 +28,8 @@ SELECT
     r.fecha_checkout::DATE AS fecha_checkout,
     r.numero_huespedes::INTEGER AS numero_huespedes,
     r.estado_reserva::TEXT AS estado_reserva,
-
-    CASE 
-        WHEN r.fecha_checkout > r.fecha_checkin
-        THEN DATEDIFF(DAY, r.fecha_checkin, r.fecha_checkout)
-        ELSE 0
-    END::INTEGER AS noches_estancia,
-    
+    r.noches_estancia::INTEGER AS noches_estancia,
     r._dbt_loaded_at::TIMESTAMP_LTZ AS _dbt_updated_at
-FROM reservas r
-LEFT JOIN habitaciones h 
+FROM reservas_source r
+LEFT JOIN habitaciones_dim h 
     ON r.id_habitacion = h.id_habitacion
