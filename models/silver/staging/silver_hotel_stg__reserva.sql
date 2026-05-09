@@ -38,13 +38,13 @@ final_fechas AS (
             TRY_TO_DATE(fecha_checkin, 'YYYY/MM/DD'),
             TRY_TO_DATE(fecha_checkin, 'DD/MM/YYYY'),
             TRY_TO_DATE(fecha_checkin, 'MM/DD/YYYY'),
-            CURRENT_DATE()  -- CORREGIDO: agregado fallback
+            CURRENT_DATE()  
         ) AS fecha_checkin,
         COALESCE(
             TRY_TO_DATE(fecha_checkout, 'YYYY/MM/DD'),
             TRY_TO_DATE(fecha_checkout, 'DD/MM/YYYY'),
             TRY_TO_DATE(fecha_checkout, 'MM/DD/YYYY'),
-            DATEADD(day, 1, CURRENT_DATE())  -- CORREGIDO: agregado fallback (checkout = mañana)
+            DATEADD(day, 1, CURRENT_DATE())  
         ) AS fecha_checkout
     FROM src_reserva
 )
@@ -69,3 +69,9 @@ SELECT
     CURRENT_TIMESTAMP() AS _dbt_loaded_at
 FROM final_fechas
 WHERE id_habitacion IN (SELECT id_habitacion FROM {{ ref('silver_hotel_stg__habitacion') }})
+
+-- 🛡️ LA CORRECCIÓN: Eliminamos duplicados de id_reserva aquí mismo
+QUALIFY ROW_NUMBER() OVER (
+    PARTITION BY id_reserva 
+    ORDER BY _dbt_loaded_at DESC
+) = 1
