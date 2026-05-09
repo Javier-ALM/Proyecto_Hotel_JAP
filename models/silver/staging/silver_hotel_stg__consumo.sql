@@ -1,40 +1,49 @@
-{{ config(
-    materialized='view'
-)}}
+{{
+    config(
+        materialized='view'
+    )
+}}
 
-WITH src_consumo AS (
-    SELECT * FROM {{ source('hotel_raw', 'RAW_CONSUMO') }}
+with src_consumo as (
+    select *
+    from {{ source('hotel_raw', 'RAW_CONSUMO') }}
 ),
 
-quitar_duplicados AS (
-    SELECT
+quitar_duplicados as (
+    select
         *,
-        ROW_NUMBER() OVER (PARTITION BY id_consumo ORDER BY id_consumo) AS row_num
-    FROM src_consumo
+        row_number() over (partition by id_consumo order by id_consumo) as row_num
+    from src_consumo
 ),
 
-transformacion AS (
-    SELECT
-        id_consumo::INTEGER AS id_consumo,
-        id_reserva::INTEGER AS id_reserva,
-        TRIM(id_servicio::TEXT)::INTEGER AS id_servicio,
-
-        COALESCE (
-            TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'YYYY/MM/DD'),
-            TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'DD/MM/YYYY'),
-            TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_consumo::TEXT), 10), '[-]', '/'), 'MM/DD/YYYY'),
-            CURRENT_DATE()  -- CORREGIDO: agregado fallback
-        ) AS fecha_consumo,
-
-        TRY_TO_DECIMAL(REGEXP_REPLACE(cantidad::TEXT, '[^0-9.]', ''), 10, 2) AS cantidad,
-
-        TRY_TO_DECIMAL(REGEXP_REPLACE(subtotal::TEXT, '[^0-9.]', ''), 10, 2) AS subtotal,
-
-        CURRENT_TIMESTAMP() AS _dbt_loaded_at
-    
-    FROM quitar_duplicados
-    WHERE row_num = 1    
+transformacion as (
+    select
+        id_consumo::integer as id_consumo,
+        id_reserva::integer as id_reserva,
+        trim(id_servicio::text)::integer as id_servicio,
+        coalesce(
+            try_to_date(regexp_replace(left(trim(fecha_consumo::text), 10), '[-]', '/'), 'YYYY/MM/DD'),
+            try_to_date(regexp_replace(left(trim(fecha_consumo::text), 10), '[-]', '/'), 'YYYY-MM-DD'),
+            try_to_date(regexp_replace(left(trim(fecha_consumo::text), 10), '[-]', '/'), 'DD/MM/YYYY'),
+            try_to_date(regexp_replace(left(trim(fecha_consumo::text), 10), '[-]', '/'), 'MM/DD/YYYY')
+        ) as fecha_consumo,
+        try_to_decimal(regexp_replace(cantidad::text, '[^0-9.]', ''), 10, 2) as cantidad,
+        try_to_decimal(regexp_replace(subtotal::text, '[^0-9.]', ''), 10, 2) as importe_consumo,
+        current_timestamp() as _dbt_updated_at
+    from quitar_duplicados
+    where row_num = 1
 )
 
-SELECT * FROM transformacion
-WHERE id_reserva IN (SELECT id_reserva FROM {{ ref('silver_hotel_stg__reserva') }})
+select
+    id_consumo,
+    id_reserva,
+    id_servicio,
+    fecha_consumo,
+    cantidad,
+    importe_consumo,
+    _dbt_updated_at
+from transformacion
+where id_reserva in (
+    select id_reserva
+    from {{ ref('silver_hotel_stg__reserva') }}
+)

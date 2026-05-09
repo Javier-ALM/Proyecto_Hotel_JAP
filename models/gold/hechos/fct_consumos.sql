@@ -5,11 +5,11 @@
 ) }}
 
 SELECT
-    id_consumo::INTEGER AS id_consumo,
-    id_reserva::INTEGER AS id_reserva,
-    id_servicio::INTEGER AS id_servicio,
-    fecha_consumo::DATE AS fecha_consumo,
-    cantidad::DECIMAL(10,2) AS cantidad,
-    subtotal::DECIMAL(10,2) AS importe_consumo,
-    _dbt_loaded_at::TIMESTAMP_LTZ AS _dbt_updated_at
+    id_consumo, -- Ya es INTEGER en Silver
+    id_reserva, -- Ya es INTEGER en Silver
+    id_servicio, -- Ya es INTEGER en Silver
+    fecha_consumo, -- Ya es DATE en Silver
+    cantidad, -- Ya es DECIMAL en Silver
+    importe_consumo, -- 🚨 AQUÍ: En Silver ya se llama así, no uses 'subtotal'
+    _dbt_updated_at -- 🚨 AQUÍ: Silver genera '_dbt_updated_at', no '_dbt_loaded_at'
 FROM {{ ref('silver_hotel_stg__consumo') }}

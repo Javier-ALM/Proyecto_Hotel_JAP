@@ -115,6 +115,7 @@ models:
         data_tests:
           - unique
           - not_null
+
       - name: id_reserva
         description: "ID de la reserva (FK)"
         data_type: integer
@@ -124,6 +125,7 @@ models:
               arguments:
                 to: ref('fct_reservas')
                 field: id_reserva
+
       - name: id_servicio
         description: "ID del servicio (FK)"
         data_type: integer
@@ -133,15 +135,21 @@ models:
               arguments:
                 to: ref('dim_servicio')
                 field: id_servicio
+
       - name: fecha_consumo
         description: "Fecha del consumo"
         data_type: date
+
       - name: cantidad
         description: "Cantidad consumida"
         data_type: number
-      - name: subtotal
+
+      - name: importe_consumo
         description: "Subtotal del consumo"
         data_type: number
+
+      - name: _dbt_updated_at
+        data_type: timestamp_ltz
 
 
 
@@ -178,9 +186,14 @@ models:
       - name: forma_pago
         description: "Forma de pago"
         data_type: varchar
+
       - name: estado_pago
         description: "Estado del pago"
         data_type: varchar
+
       - name: referencia_pago
         description: "Referencia del pago"
         data_type: varchar
+
+      - name: _DBT_UPDATED_AT  # <--- AÑADE ESTO EXACTAMENTE
+        data_type: timestamp_ltz

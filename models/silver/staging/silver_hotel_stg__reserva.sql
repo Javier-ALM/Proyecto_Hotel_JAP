@@ -4,29 +4,29 @@
     )
 }}
 
-WITH src_reserva AS (
-    SELECT
-        id_reserva::INTEGER AS id_reserva,
-        id_cliente::INTEGER AS id_cliente,
-        id_habitacion::INTEGER AS id_habitacion,
-        UPPER(Trim(canal_reserva::TEXT)) AS canal_reserva,
-        REGEXP_REPLACE(LEFT(TRIM(fecha_checkin::TEXT), 10), '[-]', '/') AS fecha_checkin,
-        REGEXP_REPLACE(LEFT(TRIM(fecha_checkout::TEXT), 10), '[-]', '/') AS fecha_checkout,
-        numero_huespedes::INTEGER AS numero_huespedes,
-        UPPER(TRIM(estado_reserva::TEXT)) AS estado_reserva,
-        CASE
-            WHEN TRIM(notas::TEXT) = ''
-                OR UPPER(TRIM(notas::TEXT)) IN ('NAM', 'NULL', 'N/A', 'NONE')
-                OR notas IS NULL
-            THEN 'Sin notas'
-            ELSE TRIM(notas::TEXT)
-        END AS notas
-    FROM {{ source('hotel_raw', 'RAW_RESERVA') }}
-    WHERE id_reserva IS NOT NULL
+with src_reserva as (
+    select
+        id_reserva::integer as id_reserva,
+        id_cliente::integer as id_cliente,
+        id_habitacion::integer as id_habitacion,
+        upper(trim(canal_reserva::text)) as canal_reserva,
+        left(trim(fecha_checkin::text), 10) as fecha_checkin_raw,
+        left(trim(fecha_checkout::text), 10) as fecha_checkout_raw,
+        numero_huespedes::integer as numero_huespedes,
+        upper(trim(estado_reserva::text)) as estado_reserva,
+        case
+            when trim(notas::text) = ''
+                or upper(trim(notas::text)) in ('NAM', 'NULL', 'N/A', 'NONE')
+                or notas is null
+            then 'Sin notas'
+            else trim(notas::text)
+        end as notas
+    from {{ source('hotel_raw', 'RAW_RESERVA') }}
+    where id_reserva is not null
 ),
 
-final_fechas AS (
-    SELECT
+fechas_parseadas as (
+    select
         id_reserva,
         id_cliente,
         id_habitacion,
@@ -34,22 +34,44 @@ final_fechas AS (
         numero_huespedes,
         estado_reserva,
         notas,
-        COALESCE(
-            TRY_TO_DATE(fecha_checkin, 'YYYY/MM/DD'),
-            TRY_TO_DATE(fecha_checkin, 'DD/MM/YYYY'),
-            TRY_TO_DATE(fecha_checkin, 'MM/DD/YYYY'),
-            CURRENT_DATE()  
-        ) AS fecha_checkin,
-        COALESCE(
-            TRY_TO_DATE(fecha_checkout, 'YYYY/MM/DD'),
-            TRY_TO_DATE(fecha_checkout, 'DD/MM/YYYY'),
-            TRY_TO_DATE(fecha_checkout, 'MM/DD/YYYY'),
-            DATEADD(day, 1, CURRENT_DATE())  
-        ) AS fecha_checkout
-    FROM src_reserva
+        coalesce(
+            try_to_date(fecha_checkin_raw, 'YYYY-MM-DD'),
+            try_to_date(fecha_checkin_raw, 'YYYY/MM/DD'),
+            try_to_date(fecha_checkin_raw, 'DD/MM/YYYY'),
+            try_to_date(fecha_checkin_raw, 'MM/DD/YYYY'),
+            try_to_date(regexp_replace(fecha_checkin_raw, '[-]', '/'), 'YYYY/MM/DD')
+        ) as fecha_checkin,
+        coalesce(
+            try_to_date(fecha_checkout_raw, 'YYYY-MM-DD'),
+            try_to_date(fecha_checkout_raw, 'YYYY/MM/DD'),
+            try_to_date(fecha_checkout_raw, 'DD/MM/YYYY'),
+            try_to_date(fecha_checkout_raw, 'MM/DD/YYYY'),
+            try_to_date(regexp_replace(fecha_checkout_raw, '[-]', '/'), 'YYYY/MM/DD')
+        ) as fecha_checkout
+    from src_reserva
+),
+
+fechas_corregidas as (
+    select
+        id_reserva,
+        id_cliente,
+        id_habitacion,
+        canal_reserva,
+        numero_huespedes,
+        estado_reserva,
+        notas,
+        fecha_checkin,
+        case
+            when fecha_checkin is not null and fecha_checkout is null
+                then dateadd(day, 1, fecha_checkin)
+            when fecha_checkin is not null and fecha_checkout <= fecha_checkin
+                then dateadd(day, 1, fecha_checkin)
+            else fecha_checkout
+        end as fecha_checkout
+    from fechas_parseadas
 )
 
-SELECT 
+select
     id_reserva,
     id_cliente,
     id_habitacion,
@@ -59,19 +81,16 @@ SELECT
     numero_huespedes,
     estado_reserva,
     notas,
-    CASE 
-        WHEN fecha_checkin IS NOT NULL 
-            AND fecha_checkout IS NOT NULL
-            AND fecha_checkout > fecha_checkin 
-        THEN DATEDIFF(day, fecha_checkin, fecha_checkout) 
-        ELSE 0 
-    END AS noches_estancia,
-    CURRENT_TIMESTAMP() AS _dbt_loaded_at
-FROM final_fechas
-WHERE id_habitacion IN (SELECT id_habitacion FROM {{ ref('silver_hotel_stg__habitacion') }})
-
--- 🛡️ LA CORRECCIÓN: Eliminamos duplicados de id_reserva aquí mismo
-QUALIFY ROW_NUMBER() OVER (
-    PARTITION BY id_reserva 
-    ORDER BY _dbt_loaded_at DESC
+    datediff(day, fecha_checkin, fecha_checkout) as noches_estancia,
+    current_timestamp() as _dbt_loaded_at
+from fechas_corregidas
+where id_habitacion in (
+    select id_habitacion
+    from {{ ref('silver_hotel_stg__habitacion') }}
+)
+and fecha_checkin is not null
+and fecha_checkout is not null
+qualify row_number() over (
+    partition by id_reserva
+    order by fecha_checkin desc, fecha_checkout desc, id_habitacion desc
 ) = 1

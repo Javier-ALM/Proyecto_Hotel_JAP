@@ -1,7 +1,10 @@
 version: 2
 
 models:
-  - name: stg_hotel_stg__cama
+  # =========================================================
+  # STAGING CAMA
+  # =========================================================
+  - name: silver_hotel_stg__cama
     description: "Tabla de staging de CAMAS"
     columns: 
       - name: ID_CAMA
@@ -12,53 +15,49 @@ models:
       - name: ID_HABITACION
         description: "ID que identifica la habitacion"      
       - name: TIPO_CAMA
-        description: "columna que muerta el tipo de cama"
+        description: "Columna que muestra el tipo de cama"
 
-
-  - name: stg_hotel_stg__cliente
-    description: "Modelo de staging para clientes. cambiamos C1-C8 por el nombre real de la columna"
+  # =========================================================
+  # STAGING CLIENTE
+  # =========================================================
+  - name: silver_hotel_stg__cliente
+    description: "Modelo de staging para clientes."
     columns: 
       - name: id_cliente
-        description: "ID único del cliente (era C1 en el CSV)"
+        description: "ID único del cliente"
         data_tests:
           - unique
           - not_null      
       - name: nombre
-        description: "Nombre del cliente (era el C2 en el CSV)"      
       - name: dni_pasaporte
-        description: "Dni/pasaporte del cliente (era el c3 en el CSV)"
       - name: nacionalidad
-        description: "Nacionalidad del cliente (era c4 en el CSV)"
       - name: direccion
-        description: "Direccion del cliente (era c5 en el CSV)"
       - name: email
-        description: "Email del cliente (era c6 en el CSV)"
       - name: telefono
-        description: "Telefono del cliente (era c7 en el CSV)"
       - name: fecha_registro
-        description: "Fecha de registro del cliente en el sistema (era c8 en el CSV)"
 
-
-  - name: stg_hotel_stg__consumo
-    description: "Modelo de staging para clientes. cambiamos C1-C8 por el nombre real de la columna"
+  # =========================================================
+  # STAGING CONSUMO (CORREGIDO)
+  # =========================================================
+  - name: silver_hotel_stg__consumo
+    description: "Modelo de staging para consumos."
     columns: 
-      - name: id_concumo
+      - name: id_consumo  # Corregido: antes id_concumo
         description: "ID único del consumo"
         data_tests:
           - unique
           - not_null 
       - name: ID_RESERVA
-        description: "Id de la reserva a la que esta relacionado el consumo"
       - name: ID_SERVICIO
-        description: ""
       - name: FECHA_CONSUMO
-        description: "Fecha en la que se realizo el consumo"
       - name: CANTIDAD
-        description: "Cantidad consumida"
-      - name: SUBTOTAL
-        description: ""
+      - name: importe_consumo # Sincronizado con el alias 'importe_consumo' de tu SQL
+        description: "Importe total del consumo"
 
-  - name: stg_hotel_stg__habitacion
+  # =========================================================
+  # STAGING HABITACIÓN
+  # =========================================================
+  - name: silver_hotel_stg__habitacion
     description: "Modelo de staging la tabla habitacion."
     columns: 
       - name: id_habitacion
@@ -66,144 +65,108 @@ models:
         data_tests:
           - unique
           - not_null
-      - name: ID_HABITACION
-        description: ""
       - name: ID_HOTEL
-        description: "Clave para unir con hoteles. Si falla aquí, fallará en Gold."
+        description: "Clave para unir con hoteles."
         data_tests:
           - not_null        
       - name: NUMERO_HABITACION
-        description: ""
       - name: TIPO
-        description: ""
       - name: ESTADO
-        description: ""
       - name: PRECIO_NOCHE
-        description: ""
       - name: CAPACIDAD_MAXIMA
-        description: ""
       - name: DESCRIPCION
-        description: ""
 
-  - name: stg_hotel_stg__hotel
+  # =========================================================
+  # STAGING HOTEL
+  # =========================================================
+  - name: silver_hotel_stg__hotel
     description: "Modelo de staging la tabla hotel."
     columns: 
       - name: ID_HOTEL
-        description: "ID unico de la tabla hotel"
         data_tests:
           - unique
           - not_null
       - name: NOMBRE
-      - name: DIRECCION
       - name: CIUDAD
       - name: PAIS
-      - name: TELEFONO
-      - name: EMAIL
-      - name: FECHA_CREACION
-      - name: ACTIVO
-      - name: CATEGORIA
 
-  - name: stg_hotel_stg__pago
+  # =========================================================
+  # STAGING PAGO
+  # =========================================================
+  - name: silver_hotel_stg__pago
     description: "Modelo de staging la tabla pago."
     columns: 
       - name: ID_PAGO
-        description: "ID unico de la tabla pago"
         data_tests:
           - unique
           - not_null
       - name: ID_RESERVA
-      - name: FECHA_PAGO
       - name: MONTO_TOTAL
-      - name: FORMA_PAGO
-      - name: ESTADO_PAGO
-      - name: REFERENCIA_PAGO
 
-  - name: stg_hotel_stg__recepcionista
+  # =========================================================
+  # STAGING RECEPCIONISTA
+  # =========================================================
+  - name: silver_hotel_stg__recepcionista
     description: "Modelo de staging la tabla recepcionista."
     columns: 
       - name: ID_RECEPCIONISTA
-        description: "ID unico de la tabla recepcionista"
         data_tests:
           - unique
           - not_null
       - name: ID_HOTEL
       - name: NOMBRE
-      - name: EMAIL
-      - name: PASSWORD_HASH
-      - name: TELEFONO
-      - name: FECHA_CONTRATACION
-      - name: ACTIVO
 
+  # =========================================================
+  # STAGING RESERVA (CORREGIDO)
+  # =========================================================
   - name: silver_hotel_stg__reserva
     description: "Modelo de staging la tabla reserva."
     columns: 
       - name: ID_RESERVA
-        description: "ID unico de la tabla reserva"
         data_tests:
           - unique
           - not_null
-
       - name: ID_CLIENTE
         data_tests:
           - not_null          
-      
       - name: ID_HABITACION
-        description: "Si es nulo, no encontrará hotel en Gold."
         data_tests:
           - not_null          
           - relationships:
               arguments: 
-                to: ref('silver_hotel_stg__habitacion')
+                to: ref('silver_hotel_stg__habitacion') # Sincronizado con el nombre arriba
                 field: id_habitacion
-
-      - name: CANAL_RESERVA 
-
-      - name: FECHA_CHECKIN
-
-      - name: FECHA_CHECKOUT
-
-      - name: NUMERO_HUESPEDES
-
       - name: ESTADO_RESERVA
         data_tests:
           - accepted_values:
               arguments: 
-                  values: ['CONFIRMADA', 'CANCELADA', 'CHECK-IN', 'CHECK-OUT', 'FINALIZADA', 'PENDIENTE']
-
-      - name: NOTAS
-
+                values: ['CONFIRMADA', 'CANCELADA', 'CHECK-IN', 'CHECK-OUT', 'FINALIZADA', 'PENDIENTE']
       - name: noches_estancia
         data_tests:
           - not_null          
-      
-      - name: FECHA_RESERVA
-
       - name: _dbt_updated_at
-
         data_type: timestamp_ltz  
-      
-  - name: stg_hotel_stg__servicio
+
+  # =========================================================
+  # STAGING SERVICIO
+  # =========================================================
+  - name: silver_hotel_stg__servicio
     description: "Modelo de staging la tabla servicio."
     columns: 
       - name: ID_SERVICIO
-        description: "ID unico de la tabla servicio"
         data_tests:
           - unique
           - not_null 
       - name: NOMBRE_SERVICIO
-      - name: CATEGORIA
-      - name: DESCRIPCION
       - name: PRECIO_UNITARIO
-      - name: ACTIVO
 
-  - name: stg_hotel_stg__turno
+  # =========================================================
+  # STAGING TURNO
+  # =========================================================
+  - name: silver_hotel_stg__turno
     description: "Modelo de staging la tabla turno."
     columns: 
       - name: ID_TURNO
-        description: "ID unico de la tabla turno"
         data_tests:
           - unique
           - not_null
-      - name: ID_RECEPCIONISTA
-      - name: FECHA_INICIO
-      - name: FECHA_FIN
