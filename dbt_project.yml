@@ -35,6 +35,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 # continue to be built as views. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 
+on-run-start:
+  - "ALTER SESSION SET TIMEZONE = 'Europe/Madrid'"
+
+
 models:
   Proyecto_Hotel_JAP:
     silver:
