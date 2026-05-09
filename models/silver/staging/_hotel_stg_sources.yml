@@ -4,12 +4,13 @@ sources:
   - name: hotel_raw
     database: HOTEL_DEV_BRONZE_DB
     schema: RAW_HOTEL_DATA
+    
     config:
       freshness:
-        warn_after: {count: 100, period: day}
-        error_after: {count: 365, period: day}
-      loaded_at_field: loaded_at
-
+        warn_after: {count: 1000, period: day}
+        error_after: {count: 2000, period: day}
+      loaded_at_field: LOADED_AT
+      
     
     tables:
       - name: RAW_CAMA
@@ -95,6 +96,9 @@ sources:
           - name: NUMERO_HUESPEDES
           - name: ESTADO_RESERVA
           - name: NOTAS
+          - name: LOADED_AT
+
+          
 
       - name: RAW_SERVICIO
         columns:
