@@ -19,7 +19,7 @@ models:
           - not_null
           
       - name: id_cliente
-        description: "ID del cliente (FK)"
+        description: "ID del cliente (FK) - relación con DIM_CLIENTES"
         data_type: integer
         data_tests:
           - not_null
@@ -29,7 +29,7 @@ models:
                 field: id_cliente
                 
       - name: id_hotel
-        description: "ID del hotel (FK)"
+        description: "ID del hotel (FK) - Relacion con DIM_HOTELES"
         data_type: integer
         data_tests:
           - not_null
@@ -39,7 +39,7 @@ models:
                 field: id_hotel
                 
       - name: id_habitacion
-        description: "ID de la habitacion (FK)"
+        description: "ID de la habitacion (FK) - Relacion con DIM_HABITACIONES"
         data_type: integer
         data_tests:
           - not_null
@@ -49,29 +49,29 @@ models:
                 field: id_habitacion
                 
       - name: canal_reserva
-        description: "Canal por el que se realizo la reserva"
+        description: "Canal de origen de la reserva (Online, Directo, Agencia)"
         data_type: varchar
         
       - name: fecha_checkin
-        description: "Fecha de entrada"
+        description: "Fecha programada de entrada al hotel"
         data_type: date
         data_tests:
           - not_null
           
       - name: fecha_checkout
-        description: "Fecha de salida"
+        description: "Fecha programada de salida del hotel"
         data_type: date
         data_tests:
           - not_null
           
       - name: numero_huespedes
-        description: "Numero de huespedes"
+        description: "Cantidad total de personas incluidas en la reserva"
         data_type: integer
         data_tests:
           - not_null
           
       - name: estado_reserva
-        description: "Estado actual de la reserva"
+        description: "Estado actual de la reserva (CONFIRMADA, CANCELADA, etc.)"
         data_type: varchar
         data_tests:
           - not_null
@@ -80,7 +80,7 @@ models:
                 values: ['CONFIRMADA', 'CANCELADA', 'CHECK-IN', 'CHECK-OUT', 'FINALIZADA', 'PENDIENTE']
                 
       - name: noches_estancia
-        description: "Numero de noches calculadas"
+        description: "Diferencia de dias calculada entre checkout y checkin"
         data_type: integer
         data_tests:
           - not_null
@@ -104,20 +104,20 @@ models:
 #                   fct_consumos
 #=======================================================
   - name: fct_consumos
-    description: "Tabla de hechos de consumos"
+    description: "Tabla de hechos que registra cada gasto/servicio consumido durante las estancias"
     config:
       contract:
         enforced: true
     columns:
       - name: id_consumo
-        description: "ID unico del consumo (PK)"
+        description: "ID unico del registro consumo (PK)"
         data_type: integer
         data_tests:
           - unique
           - not_null
 
       - name: id_reserva
-        description: "ID de la reserva (FK)"
+        description: "ID de la reserva (FK) - Asegura que el consumo pertenece a una estancia valida"
         data_type: integer
         data_tests:
           - not_null
@@ -127,7 +127,7 @@ models:
                 field: id_reserva
 
       - name: id_servicio
-        description: "ID del servicio (FK)"
+        description: "ID del servicio (FK) - Relacion con DIM_SERVICIO"
         data_type: integer
         data_tests:
           - not_null
@@ -137,18 +137,19 @@ models:
                 field: id_servicio
 
       - name: fecha_consumo
-        description: "Fecha del consumo"
+        description: "Fecha en la que se realizo el consumo"
         data_type: date
 
       - name: cantidad
-        description: "Cantidad consumida"
+        description: "Unidades o volumen del servicio consumido"
         data_type: number
 
       - name: importe_consumo
-        description: "Subtotal del consumo"
+        description: "Monto economico total del consumo (Subtotal)"
         data_type: number
 
       - name: _dbt_updated_at
+        description: "Fecha de carga/actualizacion del registro en la capa Gold"
         data_type: timestamp_ltz
 
 
@@ -157,7 +158,7 @@ models:
 #                   fct_pagos
 #=======================================================
   - name: fct_pagos
-    description: "Tabla de hechos de pagos"
+    description: "Tabla de hechos de transacciones de pago asociadas a reservas"
     config:
       contract:
         enforced: true
@@ -168,6 +169,7 @@ models:
         data_tests:
           - unique
           - not_null
+
       - name: id_reserva
         description: "ID de la reserva (FK)"
         data_type: integer
@@ -177,23 +179,27 @@ models:
               arguments:
                 to: ref('fct_reservas')
                 field: id_reserva
+
       - name: fecha_pago
-        description: "Fecha del pago"
+        description: "Fecha en la que se proceso el pago"
         data_type: date
+
       - name: monto_total
-        description: "Monto total del pago"
+        description: "Importe total abonado en la transaccion"
         data_type: number
+
       - name: forma_pago
-        description: "Forma de pago"
+        description: "Metodo utilizado (Efectivo, Tarjeta, Transferencia)"
         data_type: varchar
 
       - name: estado_pago
-        description: "Estado del pago"
+        description: "Estado de la transaccion (Completado, Pendiente, Reembolsado)"
         data_type: varchar
 
       - name: referencia_pago
-        description: "Referencia del pago"
+        description: "Codigo de autorizacion o ticket de pago"
         data_type: varchar
 
-      - name: _DBT_UPDATED_AT  # <--- AÑADE ESTO EXACTAMENTE
+      - name: _DBT_UPDATED_AT
+        description: "Fecha de carga/actualizacion del registro en la capa Gold"
         data_type: timestamp_ltz

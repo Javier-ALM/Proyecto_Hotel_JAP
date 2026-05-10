@@ -8,36 +8,59 @@ models:
     description: "Maestra de clientes con limpieza de nombres y normalización de nacionalidad vía Seed."
     columns:
       - name: id_cliente
+        description: "Clave primaria del cliente"
         data_type: integer
         data_tests:
           - unique    # TEST 1
           - not_null  # TEST 2
+
       - name: nombre_completo
+        description: "Nombre y apellidos del cliente concatenados"
         data_type: varchar
+
       - name: dni_pasaporte
+        description: "Documento de identidad único del cliente"
         data_type: varchar
+
       - name: email
+        description: "Correo electrónico validado"
         data_type: varchar
+
       - name: telefono
+        description: "Teléfono de contacto"
         data_type: varchar
+
       - name: direccion
+        description: "Dirección física de residencia del cliente"
         data_type: varchar
+
       - name: fecha_registro
+        description: "Fecha original de alta en el sistema"
         data_type: date
+
       - name: dias_desde_registro
+        description: "Antigüedad del cliente en días"
         data_type: integer
+
       - name: nacionalidad
+        description: "País de origen del cliente"
         data_type: varchar
+
       - name: codigo_pais_iso2
+        description: "Código de país en formato de 2 letras"
         data_type: varchar
+
       - name: codigo_pais_iso3
+        description: "Código de país en formato de 3 letras (ISO Alpha-3)"
         data_type: varchar
         data_tests:
           - relationships:    # TEST 3
               arguments: 
                 to: ref('paises_iso')
                 field: iso_alfa_3
+
       - name: _dbt_updated_at
+        description: "Timestamp de carga en la capa Gold"
         data_type: timestamp_ltz
 
   # =========================================================
@@ -47,45 +70,71 @@ models:
     description: "Maestra de hoteles con enriquecimiento de país y segmentación de negocio."
     columns:
       - name: id_hotel
+        description: "Clave primaria del hotel"
         data_type: integer
         data_tests:
           - unique    # TEST 1
           - not_null  # TEST 2
+
       - name: nombre_hotel
+        description: "Nombre comercial del establecimiento"
         data_type: varchar
+
       - name: direccion
+        description: "Ubicación física del hotel"
         data_type: varchar
+
       - name: ciudad
+        description: "Ciudad donde esta ubicado el hotel"
         data_type: varchar
+
       - name: pais_nombre
+        description: "Nombre completo del país"
         data_type: varchar
+
       - name: pais_codigo_iso3
+        description: "Código ISO de 3 letras del país"
         data_type: varchar
         data_tests:
           - relationships:    #TEST 3
               arguments: 
                 to: ref('paises_iso')
                 field: iso_alfa_3
+
       - name: telefono
+        description: "Teléfono de recepción"
         data_type: varchar
+
       - name: email
+        description: "Email corporativo del hotel"
         data_type: varchar
+
       - name: fecha_creacion
+        description: "Fecha de apertura o registro del hotel"
         data_type: date
+
       - name: es_activo
+        description: "Flag booleano que indica si el hotel está operativo"
         data_type: boolean
+
       - name: estrellas
+        description: "Calificación oficial del hotel (1-5)"
         data_type: integer
+        
       - name: segmento_hotel
-        description: "Clasificación comercial del hotel basada en sus estrellas."
+        description: "Clasificación comercial del hotel basada en sus estrellas (Lujo, Estandar, Economico)."
         data_type: varchar
         data_tests:
           - accepted_values:    # TEST 4
               arguments: 
                 values: ['Lujo', 'Estandar', 'Economico']
+
       - name: anios_operativo
+        description: "Antigüedad del hotel en años desde su creación"
         data_type: integer
+
       - name: _dbt_updated_at
+        description: "Timestamp de actualización del registro"
         data_type: timestamp_ntz
 
   # =========================================================
@@ -98,43 +147,62 @@ models:
         enforced: true
     columns:
       - name: fecha
+        description: "Clave primaria en formato DATE"
         data_type: date
         data_tests:
           - unique    # TEST 1
           - not_null  # TEST 2
+
       - name: anio
+        description: "Año de la fecha"
         data_type: integer
+
       - name: mes
+        description: "Número de mes (1-12)"
         data_type: integer
+
       - name: nombre_mes
+        description: "Nombre completo del mes"
         data_type: varchar
+
       - name: dia
+        description: "Día del mes"
         data_type: integer
+
       - name: dia_semana
+        description: "Número de día de la semana"
         data_type: integer
+
       - name: nombre_dia
+        description: "Nombre del día (Lunes, Martes...)"
         data_type: varchar
+
       - name: trimestre
+        description: "Número de trimestre (1-4)"
         data_type: integer
+
       - name: es_fin_de_semana
+        description: "Indica si es Sábado o Domingo"
         data_type: boolean
 
   # =========================================================
   # DIMENSIÓN HABITACIONES
   # =========================================================
   - name: dim_habitaciones
-    description: "Maestra de habitaciones con los 4 tests genéricos activos."
+    description: "Maestra de habitaciones incluyendo detalles de camas y precios."
     config:
       contract:
         enforced: true
     columns:
       - name: id_habitacion
+        description: "Clave primaria de la habitación"
         data_type: integer
         data_tests:
           - unique    # TEST 1
           - not_null  # TEST 2
 
       - name: id_hotel
+        description: "Clave foránea del hotel"
         data_type: integer
         data_tests:
           - not_null
@@ -144,12 +212,15 @@ models:
                 field: id_hotel
 
       - name: nombre_hotel
+        description: "Nombre del hotel asociado"
         data_type: varchar
 
       - name: numero_habitacion
+        description: "Número físico de la habitación"
         data_type: varchar
 
       - name: tipo_habitacion
+        description: "Categoría (SUITE, DOBLE, INDIVIDUAL, DELUXE)"
         data_type: varchar
         data_tests:
           - accepted_values: # TEST 4
@@ -157,24 +228,31 @@ models:
                 values: ['SUITE', 'DOBLE', 'INDIVIDUAL', 'DELUXE']
 
       - name: estado_habitacion
+        description: "Estado (Disponible, Ocupada, Limpieza)"
         data_type: varchar
 
       - name: precio_noche
+        description: "Costo por noche de estancia"
         data_type: decimal(10,2)
 
       - name: capacidad_maxima
+        description: "Máximo de huéspedes"
         data_type: integer
 
       - name: descripcion
+        description: "Detalles adicionales"
         data_type: varchar
 
       - name: detalle_camas
+        description: "Descripción de las camas disponibles"
         data_type: varchar
 
       - name: cantidad_camas
+        description: "Número total de camas en la habitación"
         data_type: integer
 
       - name: categoria_precio
+        description: "Clasificación de precio (PREMIUM, ECONOMICO, ESTANDAR)"
         data_type: varchar
         data_tests:
           - accepted_values:    # TEST 4
@@ -182,6 +260,7 @@ models:
                 values: ['PREMIUM', 'ECONOMICO', 'ESTANDAR']
 
       - name: _dbt_updated_at
+        description: "Última actualización por dbt"
         data_type: timestamp_ltz
 
 
@@ -189,18 +268,20 @@ models:
   # DIMENSIÓN SERVICIOS 
   # =========================================================
   - name: dim_servicio
-    description: "Maestra de servicios con contrato enforced."
+    description: "Maestra de servicios ofrecidos por los hoteles."
     config:
       contract:
         enforced: true
     columns:
       - name: id_servicio
+        description: "Clave primaria del servicio"
         data_type: integer
         data_tests:
           - unique           # TEST 1
           - not_null         # TEST 2
 
       - name: nombre_servicio
+        description: "Nombre del servicio (Bar, Gym, etc.)"
         data_type: varchar
         data_tests:
           - not_null
@@ -210,6 +291,7 @@ models:
                 field: nombre_servicio
 
       - name: categoria
+        description: "Categoría del servicio"
         data_type: varchar
         data_tests:
           - not_null
@@ -219,15 +301,19 @@ models:
                 field: categoria
 
       - name: descripcion
+        description: "Descripción detallada del servicio"
         data_type: varchar
 
       - name: precio_unitario
+        description: "Precio base por uso o unidad"
         data_type: integer
 
       - name: es_activo
+        description: "Estado operativo del servicio"
         data_type: boolean
 
       - name: categoria_precio_servicio
+        description: "Rango de precio del servicio (PREMIUM, BASICO)"
         data_type: varchar
         data_tests:
           - accepted_values: # TEST 4
@@ -235,4 +321,5 @@ models:
                 values: ['PREMIUM', 'BASICO']
 
       - name: _dbt_updated_at
+        description: "Última actualización por dbt"
         data_type: timestamp_ltz

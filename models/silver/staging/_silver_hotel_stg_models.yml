@@ -12,8 +12,10 @@ models:
         data_tests:
           - unique
           - not_null  
+
       - name: ID_HABITACION
-        description: "ID que identifica la habitacion"      
+        description: "ID que identifica la habitacion"   
+
       - name: TIPO_CAMA
         description: "Columna que muestra el tipo de cama"
 
@@ -28,13 +30,27 @@ models:
         data_tests:
           - unique
           - not_null      
+
       - name: nombre
+        description: "Nombre completo del cliente"
+
       - name: dni_pasaporte
+        description: "Documento identificativo del cliente"
+
       - name: nacionalidad
+        description: "País de origen del cliente"
+
       - name: direccion
+        description: "Dirección donde reside el cliente"
+
       - name: email
+        description: "Correo electrónico de contacto del cliente"
+
       - name: telefono
+        description: "Teléfono de contacto del cliente"
+
       - name: fecha_registro
+        description: "Fecha en la que el cliente se dio de alta en el sistema"
 
   # =========================================================
   # STAGING CONSUMO (CORREGIDO)
@@ -47,11 +63,20 @@ models:
         data_tests:
           - unique
           - not_null 
+
       - name: ID_RESERVA
+        description: "Referencia a la reserva que generó el gasto"
+
       - name: ID_SERVICIO
+        description: "Referencia al servicio consumido (bar, spa, etc.)"
+
       - name: FECHA_CONSUMO
+        description: "Fecha en la que se realizó el cargo"
+
       - name: CANTIDAD
-      - name: importe_consumo # Sincronizado con el alias 'importe_consumo' de tu SQL
+        description: "Unidades consumidas"
+
+      - name: importe_consumo
         description: "Importe total del consumo"
 
   # =========================================================
@@ -65,16 +90,29 @@ models:
         data_tests:
           - unique
           - not_null
+
       - name: ID_HOTEL
         description: "Clave para unir con hoteles."
         data_tests:
           - not_null        
+
       - name: NUMERO_HABITACION
+        description: "Número que identifica la habitación en el hotel"
+
       - name: TIPO
+        description: "Categoría de la habitación Simple, Doble, Suite"
+
       - name: ESTADO
+        description: "Estado actual de la habitación (Disponible, Ocupada, Limpieza)"
+
       - name: PRECIO_NOCHE
+        description: "Tarifa base por noche de estancia"
+
       - name: CAPACIDAD_MAXIMA
+        description: "Número máximo de huéspedes permitidos"
+
       - name: DESCRIPCION
+        description: "Detalles adicionales sobre las comodidades de la habitación"
 
   # =========================================================
   # STAGING HOTEL
@@ -83,12 +121,19 @@ models:
     description: "Modelo de staging la tabla hotel."
     columns: 
       - name: ID_HOTEL
+        description: "ID único del hotel"
         data_tests:
           - unique
           - not_null
+
       - name: NOMBRE
+        description: "Nombre comercial del hotel"
+
       - name: CIUDAD
+        description: "Ciudad donde el hotel está ubicado"
+
       - name: PAIS
+        description: "País donde el hotel se encuentra ubicado"
 
   # =========================================================
   # STAGING PAGO
@@ -97,11 +142,16 @@ models:
     description: "Modelo de staging la tabla pago."
     columns: 
       - name: ID_PAGO
+        description: "Identificador único de la transacción de pago"
         data_tests:
           - unique
           - not_null
+
       - name: ID_RESERVA
+        description: "Referencia a la reserva asociada al pago" 
+
       - name: MONTO_TOTAL
+        description: "Importe total liquidado en la transacción"
 
   # =========================================================
   # STAGING RECEPCIONISTA
@@ -110,41 +160,57 @@ models:
     description: "Modelo de staging la tabla recepcionista."
     columns: 
       - name: ID_RECEPCIONISTA
+        description: "ID único del empleado de recepción"
         data_tests:
           - unique
           - not_null
+
       - name: ID_HOTEL
+        description: "ID del hotel donde trabaja el recepcionista"
+
       - name: NOMBRE
+        description: "Nombre completo del empleado"
 
   # =========================================================
-  # STAGING RESERVA (CORREGIDO)
+  # STAGING RESERVA 
   # =========================================================
   - name: silver_hotel_stg__reserva
-    description: "Modelo de staging la tabla reserva."
+    description: "Modelo de staging la tabla reserva, con validación de estados y fechas."
     columns: 
       - name: ID_RESERVA
+        description: "Código único de la reserva"
         data_tests:
           - unique
           - not_null
+
       - name: ID_CLIENTE
+        description: "ID del cliente que realizó la reserva"
         data_tests:
           - not_null          
+
       - name: ID_HABITACION
+        description: "ID de la habitación reservada"
         data_tests:
           - not_null          
           - relationships:
               arguments: 
-                to: ref('silver_hotel_stg__habitacion') # Sincronizado con el nombre arriba
+                to: ref('silver_hotel_stg__habitacion') 
                 field: id_habitacion
+
       - name: ESTADO_RESERVA
+        description: "Estado de la reserva (CONFIRMADA, CANCELADA, etc.)"
         data_tests:
           - accepted_values:
               arguments: 
                 values: ['CONFIRMADA', 'CANCELADA', 'CHECK-IN', 'CHECK-OUT', 'FINALIZADA', 'PENDIENTE']
+
       - name: noches_estancia
+        description: "Número de noches calculadas de estancia"
         data_tests:
-          - not_null          
+          - not_null         
+
       - name: _dbt_updated_at
+        description: "Timestamp de la última actualización del registro por dbt"
         data_type: timestamp_ltz  
 
   # =========================================================
@@ -154,11 +220,16 @@ models:
     description: "Modelo de staging la tabla servicio."
     columns: 
       - name: ID_SERVICIO
+        description: "ID único del servicio ofrecido"
         data_tests:
           - unique
-          - not_null 
+          - not_null
+
       - name: NOMBRE_SERVICIO
+        description: "Nombre descriptivo del servicio"
+
       - name: PRECIO_UNITARIO
+        description: "Costo por unidad del servicio"
 
   # =========================================================
   # STAGING TURNO
@@ -167,6 +238,7 @@ models:
     description: "Modelo de staging la tabla turno."
     columns: 
       - name: ID_TURNO
+        description: "ID único del turno de trabajo"
         data_tests:
           - unique
           - not_null
