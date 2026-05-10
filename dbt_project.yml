@@ -57,6 +57,7 @@ models:
       hechos:
         +tags: ["fact"]
       mart:
+        +schema: marts
         +tags: ["casos_negocio"]
 
 seeds: 
