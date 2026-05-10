@@ -1,10 +1,6 @@
 {{ config(
     materialized='table',
-    database='HOTEL_DEV_GOLD_DB',
-    schema='dimensiones',
-    config={
-      "contract": {"enforced": true}
-    }
+    contract={"enforced": true}
 ) }}
 
 WITH generador_filas AS (

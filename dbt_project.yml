@@ -42,7 +42,7 @@ on-run-start:
 models:
   Proyecto_Hotel_JAP:
     silver:
-      +database: HOTEL_DEV_SILVER_DB
+      +database: "{{ env_var('DBT_DATABASE_SILVER') }}"
       +schema: silver
       +materialized: view
       staging:
@@ -62,7 +62,7 @@ models:
 
 seeds: 
   Proyecto_Hotel_JAP:
-    +database: HOTEL_DEV_BRONZE_DB
+    +database: "{{ env_var('DBT_DATABASE_BRONZE') }}"
     +schema: bronze
 
 snapshots: 
