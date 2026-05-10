@@ -1,6 +1,7 @@
 {{ config(
     materialized='incremental',
-    incremental_strategy='append',
+    unique_key='id_reserva',
+    incremental_strategy='delete+insert',
     on_schema_change='append_new_columns',
     schema='hechos',
     contract={'enforced': true}

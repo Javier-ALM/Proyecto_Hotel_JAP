@@ -4,25 +4,25 @@ models:
   # =========================================================
   # STAGING CAMA
   # =========================================================
-  - name: silver_hotel_stg__cama
-    description: "Tabla de staging de CAMAS"
-    columns: 
-      - name: ID_CAMA
-        description: "Clave primaria de la tabla camas"
-        data_tests:
-          - unique
-          - not_null  
-
-      - name: ID_HABITACION
-        description: "ID que identifica la habitacion"   
-
-      - name: TIPO_CAMA
-        description: "Columna que muestra el tipo de cama"
+  #- name: silver_hotel_stg__cama
+  #  description: "Tabla de staging de CAMAS"
+  #  columns: 
+  #    - name: ID_CAMA
+  #      description: "Clave primaria de la tabla camas"
+  #      data_tests:
+  #        - unique
+  #        - not_null  
+  #
+  #    - name: ID_HABITACION
+  #      description: "ID que identifica la habitacion"   
+  #
+  #    - name: TIPO_CAMA
+  #      description: "Columna que muestra el tipo de cama"
 
   # =========================================================
   # STAGING CLIENTE
   # =========================================================
-  - name: silver_hotel_stg__cliente
+  - name: silver_hotel_stg__clientes
     description: "Modelo de staging para clientes."
     columns: 
       - name: id_cliente
@@ -53,12 +53,12 @@ models:
         description: "Fecha en la que el cliente se dio de alta en el sistema"
 
   # =========================================================
-  # STAGING CONSUMO (CORREGIDO)
+  # STAGING CONSUMO 
   # =========================================================
   - name: silver_hotel_stg__consumo
     description: "Modelo de staging para consumos."
     columns: 
-      - name: id_consumo  # Corregido: antes id_concumo
+      - name: id_consumo  
         description: "ID único del consumo"
         data_tests:
           - unique
@@ -80,7 +80,7 @@ models:
         description: "Importe total del consumo"
 
   # =========================================================
-  # STAGING HABITACIÓN
+  # STAGING HABITACIÓN (Unificada con Camas)
   # =========================================================
   - name: silver_hotel_stg__habitacion
     description: "Modelo de staging la tabla habitacion."
@@ -113,6 +113,15 @@ models:
 
       - name: DESCRIPCION
         description: "Detalles adicionales sobre las comodidades de la habitación"
+
+      - name: DETALLE_CAMAS
+        description: "Tipos de camas agregados (ej: INDIVIDUAL + DOBLE)"
+
+      - name: cantidad_camas
+        description: "Conteo total de camas físicas en la habitación"
+
+      - name: _dbt_loaded_at
+        description: "Timestamp de carga en Silver"
 
   # =========================================================
   # STAGING HOTEL
@@ -156,20 +165,20 @@ models:
   # =========================================================
   # STAGING RECEPCIONISTA
   # =========================================================
-  - name: silver_hotel_stg__recepcionista
-    description: "Modelo de staging la tabla recepcionista."
-    columns: 
-      - name: ID_RECEPCIONISTA
-        description: "ID único del empleado de recepción"
-        data_tests:
-          - unique
-          - not_null
-
-      - name: ID_HOTEL
-        description: "ID del hotel donde trabaja el recepcionista"
-
-      - name: NOMBRE
-        description: "Nombre completo del empleado"
+  #- name: silver_hotel_stg__recepcionista
+  #  description: "Modelo de staging la tabla recepcionista."
+  #  columns: 
+  #    - name: ID_RECEPCIONISTA
+  #      description: "ID único del empleado de recepción"
+  #      data_tests:
+  #        - unique
+  #        - not_null
+  #
+  #    - name: ID_HOTEL
+  #      description: "ID del hotel donde trabaja el recepcionista"
+  #
+  #    - name: NOMBRE
+  #      description: "Nombre completo del empleado"
 
   # =========================================================
   # STAGING RESERVA 
@@ -234,11 +243,11 @@ models:
   # =========================================================
   # STAGING TURNO
   # =========================================================
-  - name: silver_hotel_stg__turno
-    description: "Modelo de staging la tabla turno."
-    columns: 
-      - name: ID_TURNO
-        description: "ID único del turno de trabajo"
-        data_tests:
-          - unique
-          - not_null
+  #- name: silver_hotel_stg__turno
+  #  description: "Modelo de staging la tabla turno."
+  #  columns: 
+  #    - name: ID_TURNO
+  #      description: "ID único del turno de trabajo"
+  #      data_tests:
+  #        - unique
+  #        - not_null

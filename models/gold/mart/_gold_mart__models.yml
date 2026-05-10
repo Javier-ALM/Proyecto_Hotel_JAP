@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  # =========================================================
+  # MART: OCUPACIÓN DIARIA (Revenue & Inventory)
+  # =========================================================
+  - name: mart_ocupacion_diaria
+    description: "Capa de negocio para el análisis de ocupación, ADR y RevPAR por hotel y día."
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: fecha
+        description: "Día de referencia del análisis (PK)"
+        data_type: date
+        data_tests:
+          - not_null
+
+      - name: id_hotel
+        description: "ID del establecimiento"
+        data_type: integer
+
+      - name: nombre_hotel
+        description: "Nombre comercial del hotel"
+        data_type: varchar
+
+      - name: total_reservas_activas
+        description: "Número de habitaciones ocupadas esa noche (excluye cancelaciones)"
+        data_type: integer
+
+      - name: ingresos_estimados_noche
+        description: "Suma de los precios base de las habitaciones ocupadas"
+        data_type: number
+
+      - name: adr_promedio
+        description: "Average Daily Rate: Ingresos totales / Habitaciones ocupadas"
+        data_type: number
+
+  # =========================================================
+  # MART: CLIENTES FIDELIZACIÓN (Customer 360)
+  # =========================================================
+  - name: mart_clientes_fidelizacion
+    description: "Vista integral del cliente con métricas de valor histórico (LTV) y segmentación."
+    columns:
+      - name: id_cliente
+        description: "ID único del cliente (PK)"
+        data_type: integer
+        data_tests:
+          - unique
+          - not_null
+
+      - name: nombre_completo
+        description: "Nombre del cliente"
+        data_type: varchar
+
+      - name: num_estancias
+        description: "Cantidad total de reservas finalizadas con éxito"
+        data_type: integer
+
+      - name: total_invertido
+        description: "Suma total de pagos realizados (Lifetime Value)"
+        data_type: number
+
+      - name: segmento_cliente
+        description: "Clasificación basada en gasto: VIP (>5000), Recurrente (>2000), Ocasional"
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['VIP', 'Recurrente', 'Ocasional']
+
+  # =========================================================
+  # MART: RENTABILIDAD DE SERVICIOS
+  # =========================================================
+  - name: mart_rentabilidad_servicios
+    description: "Análisis de ingresos y popularidad de los servicios extra (Spa, Restaurante, etc.)"
+    columns:
+      - name: nombre_servicio
+        description: "Nombre del servicio analizado"
+        data_type: varchar
+
+      - name: categoria
+        description: "Categoría del servicio para agrupaciones de alto nivel"
+        data_type: varchar
+
+      - name: veces_consumido
+        description: "Cantidad total de registros de consumo asociados"
+        data_type: integer
+
+      - name: ingresos_totales_servicio
+        description: "Facturación total generada por el servicio"
+        data_type: number
+        
+      - name: ticket_promedio
+        description: "Gasto medio por cada uso del servicio"
+        data_type: number

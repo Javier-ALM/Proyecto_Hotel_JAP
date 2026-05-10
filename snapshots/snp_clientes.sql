@@ -2,8 +2,8 @@
 
 {{
     config(
-        target_database='HOTEL_DEV_GOLD_DB',
-        target_schema='snapshot',
+        target_database="{{ env_var('DBT_DATABASE_GOLD') }}",
+        target_schema='snapshots',
         unique_key='id_cliente',
         strategy='check',
         check_cols='all',

@@ -42,29 +42,30 @@ on-run-start:
 models:
   Proyecto_Hotel_JAP:
     silver:
-      +database: HOTEL_DEV_SILVER_DB
+      +database: "{{ env_var('DBT_DATABASE_SILVER') }}"
       +schema: silver
       +materialized: view
       staging:
         +materialized: view
     
     gold:
-      +database: HOTEL_DEV_GOLD_DB
+      +database: "{{ env_var('DBT_DATABASE_GOLD') }}"
       +schema: gold
       +materialized: table
       dimensiones:
         +tags: ["dimension"]
       hechos:
         +tags: ["fact"]
-      mart:
+      mart: 
+        +schema: marts
         +tags: ["casos_negocio"]
 
 seeds: 
   Proyecto_Hotel_JAP:
-    +database: HOTEL_DEV_BRONZE_DB
+    +database: "{{ env_var('DBT_DATABASE_BRONZE') }}"
     +schema: bronze
 
 snapshots: 
   Proyecto_Hotel_JAP:
-    +database: HOTEL_DEV_GOLD_DB
+    +database: "{{ env_var('DBT_DATABASE_GOLD') }}"
     +schema: snapshots
