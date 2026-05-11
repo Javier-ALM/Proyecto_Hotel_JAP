@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: hotel_raw
-    database: HOTEL_DEV_BRONZE_DB
+    database: HOTEL_PRE_BRONZE_DB
     schema: RAW_HOTEL_DATA
     
     config:
