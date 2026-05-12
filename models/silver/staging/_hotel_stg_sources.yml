@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: hotel_raw
-    database: "{{ env_var('DBT_DATABASE_BRONZE') }}"
+    database: "{{ env_var('DBT_DATABASE_BRONZE', 'HOTEL_DEV_BRONZE_DB') }}" #HOTEL_PRE_BRONZE_DB
     schema: RAW_HOTEL_DATA
     
     config:

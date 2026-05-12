@@ -2,15 +2,15 @@
 
 {{
     config(
-        target_database="{{ env_var('DBT_DATABASE_GOLD') }}",
-        target_schema='snapshots',
+        target_database=env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB'),
+        target_schema='SNAPSHOTS',
         unique_key='id_cliente',
         strategy='check',
         check_cols='all',
     )
 }}
 
-SELECT
+select
     id_cliente,
     nombre,
     dni_pasaporte,
@@ -19,6 +19,6 @@ SELECT
     email,
     telefono,
     fecha_registro
-FROM {{ ref('silver_hotel_stg__clientes') }}
+from {{ ref('silver_hotel_stg__clientes') }}
 
 {% endsnapshot %}
