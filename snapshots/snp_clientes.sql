@@ -2,6 +2,7 @@
 
 {{
     config(
+        target_database=env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB'),
         target_schema='SNAPSHOTS',
         unique_key='id_cliente',
         strategy='check',

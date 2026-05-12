@@ -8,5 +8,3 @@
         {{ target.database | trim }}
     {%- endif -%}
 {%- endmacro %}
-
-

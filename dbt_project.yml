@@ -30,6 +30,7 @@ models:
 
     # Capa silver
     silver:
+      +database: "{{ env_var('DBT_DATABASE_SILVER', 'HOTEL_DEV_SILVER_DB') }}"  # linea entera añadida
       +schema: SILVER
       +materialized: view
 
@@ -38,6 +39,7 @@ models:
 
     # Capa gold
     gold:
+      +database: "{{ env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB') }}"   # linea entera añadida      
       +schema: GOLD
       +materialized: table
 
@@ -53,8 +55,10 @@ models:
 
 seeds: 
   Proyecto_Hotel_JAP:
+    +database: "{{ env_var('DBT_DATABASE_BRONZE', 'HOTEL_DEV_BRONZE_DB') }}"   # linea entera añadida
     +schema: BRONZE
 
 snapshots: 
   Proyecto_Hotel_JAP:
+    +database: "{{ env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB') }}"   # linea entera añadida
     +schema: SNAPSHOTS
