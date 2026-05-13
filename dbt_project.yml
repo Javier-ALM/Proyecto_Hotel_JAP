@@ -30,23 +30,24 @@ models:
 
     # Capa silver
     silver:
-      +database: "{{ env_var('DBT_DATABASE_SILVER', 'HOTEL_DEV_SILVER_DB') }}"  # linea entera añadida
+      +database: "{{ env_var('DBT_DATABASE_SILVER', 'HOTEL_DEV_SILVER_DB') }}"  
       +schema: SILVER
       +materialized: view
-
       staging:
         +materialized: view
 
     # Capa gold
     gold:
-      +database: "{{ env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB') }}"   # linea entera añadida      
-      +schema: GOLD
+      +database: "{{ env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB') }}"      
+      #+schema: GOLD              #PONER / QUITAR
       +materialized: table
 
       dimensiones:
+        +schema: DIMENSIONES     #PONER / QUITAR
         +tags: ["dimension"]
 
       hechos:
+        +schema: HECHOS          #PONER / QUITAR
         +tags: ["fact"]
 
       mart: 
@@ -55,10 +56,10 @@ models:
 
 seeds: 
   Proyecto_Hotel_JAP:
-    +database: "{{ env_var('DBT_DATABASE_BRONZE', 'HOTEL_DEV_BRONZE_DB') }}"   # linea entera añadida
+    +database: "{{ env_var('DBT_DATABASE_BRONZE', 'HOTEL_DEV_BRONZE_DB') }}"   
     +schema: BRONZE
 
 snapshots: 
   Proyecto_Hotel_JAP:
-    +database: "{{ env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB') }}"   # linea entera añadida
+    +database: "{{ env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB') }}"   
     +schema: SNAPSHOTS
