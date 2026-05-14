@@ -94,3 +94,21 @@ models:
       - name: ticket_promedio
         description: "Gasto medio por cada uso del servicio"
         data_type: number
+
+
+  # =========================================================
+  # MART: RENTABILIDAD EJECUTIVA
+  # =========================================================
+  - name: mart_rentabilidad_ejecutiva
+    description: "Análisis de rentabilidad por hotel, mes y canal. Incluye cálculo de beneficio neto y margen operativo."
+    columns:
+      - name: nombre_hotel
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: beneficio_neto
+        description: "Ingresos totales menos costes operativos estimados."
+        data_type: number
+      - name: margen_lucro_pct
+        description: "Porcentaje de beneficio sobre el ingreso total."
+        data_type: number
