@@ -5,42 +5,35 @@ models:
   # MART: OCUPACIÓN DIARIA (Revenue & Inventory)
   # =========================================================
   - name: mart_ocupacion_diaria
-    description: "Capa de negocio para el análisis de ocupación, ADR y RevPAR por hotel y día."
+    description: "Análisis de ocupación real noche a noche, capacidad total y porcentaje de ocupación por hotel."
     config:
       contract:
         enforced: true
     columns:
       - name: fecha
-        description: "Día de referencia del análisis (PK)"
         data_type: date
-        data_tests:
-          - not_null
-
-      - name: id_hotel
-        description: "ID del establecimiento"
-        data_type: integer
-
+        description: "Día del calendario"
       - name: nombre_hotel
-        description: "Nombre comercial del hotel"
         data_type: varchar
-
-      - name: total_reservas_activas
-        description: "Número de habitaciones ocupadas esa noche (excluye cancelaciones)"
+      - name: ciudad
+        data_type: varchar
+      - name: estrellas
         data_type: integer
-
-      - name: ingresos_estimados_noche
-        description: "Suma de los precios base de las habitaciones ocupadas"
+      - name: habitaciones_ocupadas
+        data_type: integer
+        description: "Total de habitaciones con huéspedes esa noche física."
+      - name: capacidad_total
+        data_type: integer
+        description: "Total de habitaciones físicas disponibles en el hotel."
+      - name: porcentaje_ocupacion
         data_type: number
-
-      - name: adr_promedio
-        description: "Average Daily Rate: Ingresos totales / Habitaciones ocupadas"
-        data_type: number
+        description: "KPI de ocupación (Habitaciones Ocupadas / Capacidad Total) * 100"
 
   # =========================================================
   # MART: CLIENTES FIDELIZACIÓN (Customer 360)
   # =========================================================
   - name: mart_clientes_fidelizacion
-    description: "Vista integral del cliente con métricas de valor histórico (LTV) y segmentación."
+    description: "Vista integral del cliente con métricas de valor histórico (LTV), recencia y segmentación RFM."
     columns:
       - name: id_cliente
         description: "ID único del cliente (PK)"
@@ -50,7 +43,9 @@ models:
           - not_null
 
       - name: nombre_completo
-        description: "Nombre del cliente"
+        data_type: varchar
+
+      - name: nacionalidad
         data_type: varchar
 
       - name: num_estancias
@@ -61,39 +56,61 @@ models:
         description: "Suma total de pagos realizados (Lifetime Value)"
         data_type: number
 
+      - name: recencia_dias
+        description: "Días transcurridos desde la última estancia finalizada"
+        data_type: integer
+
       - name: segmento_cliente
-        description: "Clasificación basada en gasto: VIP (>5000), Recurrente (>2000), Ocasional"
+        description: "Segmentación basada en gasto y frescura de la visita."
         data_type: varchar
         data_tests:
           - accepted_values:
               arguments:
-                values: ['VIP', 'Recurrente', 'Ocasional']
+                values: ['VIP Activo', 'VIP en Riesgo', 'Recurrente', 'Ocasional']
 
   # =========================================================
   # MART: RENTABILIDAD DE SERVICIOS
   # =========================================================
   - name: mart_rentabilidad_servicios
-    description: "Análisis de ingresos y popularidad de los servicios extra (Spa, Restaurante, etc.)"
+    description: >
+      Este modelo analiza los ingresos accesorios (Ancillary Revenue) generados por servicios 
+      adicionales al alojamiento (Spa, Restaurante, Parking, etc.). 
+      Permite identificar qué servicios son más populares y rentables según el perfil del hotel.
+    config:
+      contract:
+        enforced: true
     columns:
-      - name: nombre_servicio
-        description: "Nombre del servicio analizado"
+      - name: nombre_hotel
         data_type: varchar
+        description: "Nombre comercial del establecimiento donde se registró el consumo."
 
-      - name: categoria
-        description: "Categoría del servicio para agrupaciones de alto nivel"
+      - name: ciudad
         data_type: varchar
+        description: "Ubicación geográfica del hotel."
+
+      - name: estrellas
+        data_type: integer
+        description: "Categoría oficial del hotel (1-5 estrellas)."
+
+      - name: nombre_servicio
+        data_type: varchar
+        description: "Nombre específico del servicio extra (ej. Masaje Deportivo, Cena Gourmet)."
+
+      - name: categoria_servicio
+        data_type: varchar
+        description: "Agrupación lógica del servicio (ej. Alimentos y Bebidas, Bienestar, Transporte)."
 
       - name: veces_consumido
-        description: "Cantidad total de registros de consumo asociados"
         data_type: integer
+        description: "Volumen total de solicitudes o usos de este servicio."
 
-      - name: ingresos_totales_servicio
-        description: "Facturación total generada por el servicio"
+      - name: ingresos_totales
         data_type: number
-        
+        description: "Suma total de la facturación bruta generada por el servicio (sin deducir costes)."
+
       - name: ticket_promedio
-        description: "Gasto medio por cada uso del servicio"
         data_type: number
+        description: "Gasto medio por cada consumo realizado (Ingresos Totales / Veces Consumido)."
 
 
   # =========================================================
