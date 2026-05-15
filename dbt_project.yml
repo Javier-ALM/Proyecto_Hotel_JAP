@@ -61,5 +61,5 @@ seeds:
 
 snapshots: 
   Proyecto_Hotel_JAP:
-    +database: "{{ env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB') }}"   
+    +database: "{{ env_var('DBT_DATABASE_SILVER', 'HOTEL_DEV_SILVER_DB') }}"   
     +schema: SNAPSHOTS

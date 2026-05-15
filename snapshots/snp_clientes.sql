@@ -2,7 +2,7 @@
 
 {{
     config(
-        target_database=env_var('DBT_DATABASE_GOLD', 'HOTEL_DEV_GOLD_DB'),
+        target_database=env_var('DBT_DATABASE_SILVER', 'HOTEL_DEV_SILVER_DB'),
         target_schema='SNAPSHOTS',
         unique_key='id_cliente',
         strategy='check',
@@ -11,14 +11,21 @@
 }}
 
 select
-    id_cliente,
-    nombre,
-    dni_pasaporte,
-    nacionalidad,
-    direccion,
-    email,
-    telefono,
-    fecha_registro
-from {{ ref('silver_hotel_stg__clientes') }}
+    CAST(C1 AS INTEGER) AS id_cliente,
+    C2 AS nombre,
+    C3 AS dni_pasaporte,
+    C4 AS nacionalidad,
+    C5 AS direccion,
+    C6 AS email,
+    C7 AS telefono,
+    -- Aplicamos el parseo de fecha aquí para que Snowflake no proteste
+    COALESCE(
+        TRY_TO_DATE(TRIM(C8), 'DD-MM-YYYY'),
+        TRY_TO_DATE(TRIM(C8), 'YYYY-MM-DD'),
+        TRY_TO_DATE(TRIM(C8), 'DD/MM/YYYY'),
+        CURRENT_DATE()
+    ) AS fecha_registro
+from {{ source('hotel_raw', 'RAW_CLIENTE') }}
+where C1 != 'id_cliente' 
 
 {% endsnapshot %}
