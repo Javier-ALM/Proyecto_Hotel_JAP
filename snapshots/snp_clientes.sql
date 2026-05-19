@@ -18,13 +18,14 @@ select
     C5 AS direccion,
     C6 AS email,
     C7 AS telefono,
-    -- Aplicamos el parseo de fecha aquí para que Snowflake no proteste
+
     COALESCE(
         TRY_TO_DATE(TRIM(C8), 'DD-MM-YYYY'),
         TRY_TO_DATE(TRIM(C8), 'YYYY-MM-DD'),
         TRY_TO_DATE(TRIM(C8), 'DD/MM/YYYY'),
         CURRENT_DATE()
     ) AS fecha_registro
+    
 from {{ source('hotel_raw', 'RAW_CLIENTE') }}
 where C1 != 'id_cliente' 
 
