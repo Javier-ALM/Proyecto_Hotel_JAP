@@ -22,7 +22,7 @@ transformacion AS (
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_pago::TEXT), 10), '[-]', '/'), 'YYYY/MM/DD'),
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_pago::TEXT), 10), '[-]', '/'), 'DD/MM/YYYY'),
             TRY_TO_DATE(REGEXP_REPLACE(LEFT(TRIM(fecha_pago::TEXT), 10), '[-]', '/'), 'MM/DD/YYYY'),
-            CURRENT_DATE()  -- CORREGIDO: agregado fallback
+            CURRENT_DATE()
         ) AS fecha_pago,
 
         TRY_TO_DECIMAL(REGEXP_REPLACE(monto_total::TEXT, '[^0-9.]', ''), 10, 2) AS monto_total,
@@ -47,5 +47,5 @@ transformacion AS (
     WHERE row_num = 1
 )
 
+-- 🛡️ Salida limpia directa hacia Gold
 SELECT * FROM transformacion
-WHERE id_reserva IN (SELECT id_reserva FROM {{ ref('silver_hotel_stg__reserva') }})
