@@ -20,12 +20,13 @@ SELECT
     p.id_pago,
     p.id_reserva,
     p.fecha_pago,
-    p.monto_total, -- Volvemos al nombre exacto que exige tu contrato YAML
+    p.monto_total,                         -- Nombre exacto exigido por el contrato estructurado
     p.forma_pago,
     p.estado_pago,
     p.referencia_pago,
-    p._dbt_loaded_at AS _dbt_updated_at -- Sincronizado con el campo de auditoría del contrato
+    p._dbt_loaded_at AS _dbt_updated_at    -- Sincronizado con el campo de auditoría del contrato
 FROM pagos_transformados p
+-- 🛡️ AQUÍ SE HACE EL FILTRADO: Protege las relaciones del Modelo Estrella
 WHERE p.id_reserva IN (
     SELECT id_reserva 
     FROM {{ ref('fct_reservas') }}

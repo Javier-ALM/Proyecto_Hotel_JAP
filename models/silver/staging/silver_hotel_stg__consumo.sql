@@ -34,6 +34,7 @@ transformacion as (
     where row_num = 1
 )
 
+-- 🛡️ Salida limpia directa: Sin subconsultas que rompan el Grafo del JOB
 select
     id_consumo,
     id_reserva,
@@ -43,7 +44,3 @@ select
     importe_consumo,
     _dbt_updated_at
 from transformacion
-where id_reserva in (
-    select id_reserva
-    from {{ ref('silver_hotel_stg__reserva') }}
-)
