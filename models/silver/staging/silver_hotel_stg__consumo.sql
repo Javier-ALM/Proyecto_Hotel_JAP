@@ -45,5 +45,5 @@ select
 from transformacion
 where id_reserva in (
     select id_reserva
-    from {{ ref('silver_hotel_stg__reserva') }}
+    from {{ ref('fct_reservas') }}
 )
