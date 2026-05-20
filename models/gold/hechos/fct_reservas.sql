@@ -10,9 +10,13 @@
 WITH reservas_clean AS (
     SELECT * FROM {{ ref('silver_hotel_stg__reserva') }}
     
+    WHERE 1=1
+    -- 🛡️ PRIMER FILTRO DE SEGURIDAD: Garantiza que el cliente EXISTE en la dimensión activa de Gold
+    AND id_cliente IN (SELECT id_cliente FROM {{ ref('dim_clientes') }} )
+
     {% if is_incremental() %}
       -- Solo traemos lo nuevo que NO esté ya en Gold
-      WHERE id_reserva NOT IN (SELECT id_reserva FROM {{ this }})
+      AND id_reserva NOT IN (SELECT id_reserva FROM {{ this }})
     {% endif %}
 ),
 
