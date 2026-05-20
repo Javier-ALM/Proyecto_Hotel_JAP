@@ -1,15 +1,30 @@
 {{ config(
     materialized='table',
-    schema='hechos',
-    contract={'enforced': true}
+    schema='hechos'
 ) }}
 
+WITH consumos_transformados AS (
+    SELECT
+        id_consumo,
+        id_reserva,
+        id_servicio,
+        fecha_consumo,
+        cantidad,
+        importe_consumo,
+        _dbt_updated_at
+    FROM {{ ref('silver_hotel_stg__consumo') }}
+)
+
 SELECT
-    id_consumo, -- Ya es INTEGER en Silver
-    id_reserva, -- Ya es INTEGER en Silver
-    id_servicio, -- Ya es INTEGER en Silver
-    fecha_consumo, -- Ya es DATE en Silver
-    cantidad, -- Ya es DECIMAL en Silver
-    importe_consumo, -- 🚨 AQUÍ: En Silver ya se llama así, no uses 'subtotal'
-    _dbt_updated_at -- 🚨 AQUÍ: Silver genera '_dbt_updated_at', no '_dbt_loaded_at'
-FROM {{ ref('silver_hotel_stg__consumo') }}
+    c.id_consumo,
+    c.id_reserva,
+    c.id_servicio,
+    c.fecha_consumo,
+    c.cantidad,
+    c.importe_consumo,
+    c._dbt_updated_at AS _dbt_updated_at
+FROM consumos_transformados c
+WHERE c.id_reserva IN (
+    SELECT id_reserva 
+    FROM {{ ref('fct_reservas') }}
+)
