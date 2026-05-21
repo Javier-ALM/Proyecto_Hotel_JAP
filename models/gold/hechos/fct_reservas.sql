@@ -7,10 +7,10 @@
     contract={'enforced': true}
 ) }}
 
-WITH reservas_clean AS (
+WITH reservas_filtradas AS (
     SELECT r.* FROM {{ ref('silver_hotel_stg__reserva') }} r
-    -- 🛡️ SOLUCIÓN: Usamos INNER JOIN para descartar automáticamente las reservas 
-    -- cuyos clientes NO existen en nuestra dimensión.
+    -- 🛡️ FILTRO CRÍTICO: Eliminamos los 56 registros huérfanos aquí
+    -- Solo las reservas que tienen un cliente en DIM_CLIENTES pasan a la Gold
     INNER JOIN {{ ref('dim_clientes') }} c ON r.id_cliente = c.id_cliente
     
     {% if is_incremental() %}
@@ -35,5 +35,5 @@ SELECT
     r.noches_estancia::INTEGER AS noches_estancia,
     r._dbt_loaded_at::TIMESTAMP_LTZ AS _dbt_inserted_at,
     CURRENT_TIMESTAMP()::TIMESTAMP_LTZ AS _dbt_updated_at
-FROM reservas_clean r
+FROM reservas_filtradas r
 LEFT JOIN habitaciones_dim h ON r.id_habitacion = h.id_habitacion
