@@ -8,13 +8,13 @@
 ) }}
 
 WITH reservas_clean AS (
-    SELECT * FROM {{ ref('silver_hotel_stg__reserva') }}
-    
-    -- 🛡️ FILTRO DE INTEGRIDAD: Solo reservas con clientes existentes
-    WHERE id_cliente IN (SELECT id_cliente FROM {{ ref('dim_clientes') }})
+    SELECT r.* FROM {{ ref('silver_hotel_stg__reserva') }} r
+    -- 🛡️ FILTRO DE SEGURIDAD: Solo permitimos reservas cuyos clientes EXISTEN en la dimensión.
+    -- Esto elimina los 56 registros huérfanos que rompen tu JOB.
+    INNER JOIN {{ ref('dim_clientes') }} c ON r.id_cliente = c.id_cliente
     
     {% if is_incremental() %}
-      AND _dbt_loaded_at > (SELECT MAX(_dbt_updated_at) FROM {{ this }})
+      AND r._dbt_loaded_at > (SELECT MAX(_dbt_updated_at) FROM {{ this }})
     {% endif %}
 ),
 
