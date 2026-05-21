@@ -9,8 +9,8 @@
 
 WITH reservas_clean AS (
     SELECT r.* FROM {{ ref('silver_hotel_stg__reserva') }} r
-    -- 🛡️ FILTRO DE SEGURIDAD: Solo permitimos reservas cuyos clientes EXISTEN en la dimensión.
-    -- Esto elimina los 56 registros huérfanos que rompen tu JOB.
+    -- 🛡️ SOLUCIÓN: Usamos INNER JOIN para descartar automáticamente las reservas 
+    -- cuyos clientes NO existen en nuestra dimensión.
     INNER JOIN {{ ref('dim_clientes') }} c ON r.id_cliente = c.id_cliente
     
     {% if is_incremental() %}
